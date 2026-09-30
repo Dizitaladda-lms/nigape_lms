@@ -13,11 +13,12 @@ const aiCrawlers = [
 ];
 
 export default function robots() {
+  const baseUrl = (process.env.NEXT_PUBLIC_APP_URL || "https://www.nigape.com").replace(/\/+$/, "");
   return {
     rules: [
-      { userAgent: "*", allow: "/" },
-      ...aiCrawlers.map((userAgent) => ({ userAgent, allow: "/" })),
+      { userAgent: "*", allow: "/", disallow: ["/admin", "/api"] },
+      ...aiCrawlers.map((userAgent) => ({ userAgent, allow: "/", disallow: ["/admin", "/api"] })),
     ],
-    sitemap: "https://www.nigape.com/sitemap.xml",
+    sitemap: `${baseUrl}/sitemap.xml`,
   };
 }

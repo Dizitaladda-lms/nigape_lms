@@ -42,7 +42,13 @@ const getSecret = () => {
 };
 
 const encodePayload = (payload) => Buffer.from(JSON.stringify(payload)).toString("base64url");
-const decodePayload = (encoded) => JSON.parse(Buffer.from(encoded, "base64url").toString("utf8"));
+const decodePayload = (encoded) => {
+  try {
+    return JSON.parse(Buffer.from(encoded, "base64url").toString("utf8"));
+  } catch {
+    return null;
+  }
+};
 
 const signPayload = (encoded) =>
   crypto.createHmac("sha256", getSecret()).update(encoded).digest("hex");
@@ -63,7 +69,12 @@ export const validateAdminCredentials = (username, password) => {
   }
   const adminUser = process.env.ADMIN_USERNAME || "admin@example.com";
   const adminPass = process.env.ADMIN_PASSWORD || "";
-  return username === adminUser && password === adminPass;
+  if (!username || !password || typeof username !== "string" || typeof password !== "string") {
+    return false;
+  }
+  const userMatch = safeEqual(username, adminUser);
+  const passMatch = safeEqual(password, adminPass);
+  return Boolean(userMatch && passMatch);
 };
 
 export const createSessionToken = () => {
@@ -90,7 +101,7 @@ export const verifySessionToken = (token) => {
     return null;
   }
   const payload = decodePayload(encoded);
-  if (payload.exp && payload.exp < Date.now()) {
+  if (!payload || (payload.exp && payload.exp < Date.now())) {
     return null;
   }
   return payload;

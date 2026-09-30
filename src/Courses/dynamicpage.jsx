@@ -1,5 +1,4 @@
 'use client';
-import Head from 'next/head';
 import Image from 'next/image';
 import Link from 'next/link';
 import Homsection7 from '@/Homesections/Homesection7';
@@ -150,11 +149,6 @@ const CoursePage = ({ course }) => {
   ];
   return (
     <>
-      <Head>
-        <title>{displayTitle} | NIGAPE</title>
-        <meta name="description" content={course.description} />
-      </Head>
-
       <div className="min-h-screen bg-black text-white font-pixel">
         <main className="pt-24 pb-16 px-4 sm:px-6">
           <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-8">

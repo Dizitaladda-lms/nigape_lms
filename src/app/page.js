@@ -77,7 +77,7 @@ const localBusinessSchema = {
 
 export default function Home() {
   return (
-        <div className="mx-auto max-h-7xl">
+    <div className="w-full">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(localBusinessSchema) }}

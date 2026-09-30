@@ -22,7 +22,7 @@ export const courses = [
       name: "Shagun Srivastava",
       title: "Lead Instructor – Generative AI",
       bio: "Experienced AI educator with expertise in LLMs, prompt engineering, and applied GenAI.",
-      image: "/nimlacpic/manjeet.png",
+      image: "/Nigapepic/manjeet.webp",
       credentials: ["10+ Years in AI Education", "Built 50+ GenAI Projects"]
     },
     topics: ["Python for AI", "Prompt Engineering", "LLMs", "Generative Models", "Computer Vision", "Multimodal AI", "Project Portfolio"],
@@ -138,7 +138,7 @@ export const courses = [
       name: "Miss. Shagun",
       title: "Lead Instructor – Advanced GenAI",
       bio: "Master in AI | Former Lead AI Researcher | Expert in LLMs & Prompt Engineering",
-      image: "/nimlacpic/shagun.png",
+      image: "/shagun.png",
       credentials: ["Master in AI", "15+ Years Experience", "Published in top AI conferences"]
     },
     topics: ["Advanced LLMs", "Fine-tuning", "Prompt Frameworks", "Agentic AI", "Multimodal Systems", "Production Deployment"],
@@ -216,7 +216,7 @@ export const courses = [
       name: "Team NIGAPE",
       title: "AI Literacy Faculty",
       bio: "Expert educators simplifying AI for everyone",
-      image: "/nimlacpic/team.png",
+      image: "/Nigapepic/me.webp",
       credentials: ["Certified AI Educators"]
     },
     topics: ["AI Basics", "Prompting Skills", "AI Tools", "Ethics & Applications"],
@@ -269,7 +269,7 @@ export const courses = [
       name: "Miss. Shagun",
       title: "Lead Instructor – GenAI for Business",
       bio: "Master in AI | Industry veteran in AI transformation",
-      image: "/nimlacpic/shagun.png",
+      image: "/shagun.png",
       credentials: ["Master in AI", "15+ Years Experience"]
     },
     topics: ["Business GenAI", "Prompt Engineering", "AI Automation", "Data Analysis with AI", "AI Decision Making"],
@@ -334,7 +334,7 @@ export const courses = [
       name: "Shagun Srivastava",
       title: "Lead Instructor – NLP",
       bio: "NLP expert with experience building enterprise language systems",
-      image: "/nimlacpic/manjeet.png",
+      image: "/Nigapepic/manjeet.webp",
       credentials: ["10+ Years in NLP", "Built 30+ NLP Solutions"]
     },
     topics: ["Text Processing", "Transformers", "Chatbots", "Sentiment Analysis", "RAG", "Text Generation"],
@@ -399,7 +399,7 @@ export const courses = [
       name: "Miss. Shagun",
       title: "Lead Instructor – Computer Vision",
       bio: "Master in AI | Expert in vision models & generative AI",
-      image: "/nimlacpic/shagun.png",
+      image: "/shagun.png",
       credentials: ["Master in AI", "15+ Years Experience"]
     },
     topics: ["CNNs", "Object Detection", "Segmentation", "Image Generation", "Vision Transformers", "Multimodal Vision"],
@@ -464,7 +464,7 @@ export const courses = [
       name: "Miss. Shagun",
       title: "Lead Instructor – Deep Learning",
       bio: "Master in AI | Research background in deep learning architectures",
-      image: "/nimlacpic/shagun.png",
+      image: "/shagun.png",
       credentials: ["Master in AI", "15+ Years Experience"]
     },
     topics: ["Neural Networks", "CNNs", "RNNs/LSTMs", "GANs", "Transformers", "Reinforcement Learning"],
@@ -561,7 +561,7 @@ export const courses = [
     name: "Miss. Shagun",
     title: "Lead Instructor – Generative AI & Prompt Engineering",
     bio: "Master in AI | Expert in LLMs, Prompt Engineering, and Enterprise GenAI",
-    image: "/nimlacpic/shagun.png",
+    image: "/shagun.png",
     credentials: ["Master in AI", "15+ Years Experience", "Published AI Researcher"],
   },
   topics: [

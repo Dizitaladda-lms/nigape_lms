@@ -2,7 +2,7 @@
 "use client";
 import React, { useState } from 'react';
 
-export default function ResponsiveForm() {
+export default function ResponsiveForm({ onClose }) {
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -19,14 +19,16 @@ export default function ResponsiveForm() {
     });
   };
 
+  const handleClose = () => {
+    if (onClose) {
+      onClose();
+    } else if (typeof window !== 'undefined' && window.history.length > 1) {
+      window.history.back();
+    }
+  };
+
   const handleSubmit = async (e) => {
     if (e && e.preventDefault) e.preventDefault();
-
-    const appsScriptUrl = process.env.NEXT_PUBLIC_GOOGLE_APPS_SCRIPT_URL;
-    if (!appsScriptUrl) {
-      setSubmitState({ status: 'error', message: 'Form endpoint not configured.' });
-      return;
-    }
 
     setSubmitState({ status: 'submitting', message: 'Submitting...' });
 
@@ -59,7 +61,7 @@ export default function ResponsiveForm() {
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm">
       <div className="relative w-full max-w-md sm:max-w-lg md:max-w-2xl lg:max-w-3xl mx-2 sm:mx-4 flex flex-col items-center justify-center bg-gradient-to-br from-[#1a0022] via-black to-[#2d0036] border border-pink-500 rounded-2xl shadow-2xl overflow-hidden p-0">
         <button
-          onClick={() => window.history.back()}
+          onClick={handleClose}
           className="absolute top-4 right-4 text-[#FF40EB] text-2xl font-bold hover:text-pink-400 focus:outline-none z-20"
           aria-label="Close"
         >

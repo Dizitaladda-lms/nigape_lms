@@ -2,7 +2,7 @@ import { courses } from "@/Data/data";
 import prisma from "@/lib/prisma";
 
 export default async function sitemap() {
-  const baseUrl = "https://www.nigape.com";
+  const baseUrl = (process.env.NEXT_PUBLIC_APP_URL || "https://www.nigape.com").replace(/\/+$/, "");
 
   const staticEntries = [
     { route: "", priority: 1.0 },

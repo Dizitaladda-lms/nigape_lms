@@ -82,11 +82,13 @@ export default function Header() {
       {/* MOBILE TOPBAR — bare, no pill, only on < sm */}
       <div className="fixed top-0 left-0 right-0 z-40 flex items-center justify-between px-4 py-2 sm:hidden">
         {/* Logo */}
-        <img
-          src="/Nigapepic/nigape.svg"
-          alt="Nigape Logo"
-          className="h-28 w-auto object-contain"
-        />
+        <Link href="/">
+          <img
+            src="/Nigapepic/nigape.svg"
+            alt="Nigape Logo"
+            className="h-28 w-auto object-contain"
+          />
+        </Link>
 
         {/* Hamburger */}
         <button
