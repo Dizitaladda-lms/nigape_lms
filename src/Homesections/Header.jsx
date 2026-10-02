@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useState } from 'react';
+import CountrySelector from '@/components/CountrySelector';
 
 export default function Header() {
   const pathname = usePathname();
@@ -41,7 +42,7 @@ export default function Header() {
       <nav className="fixed top-4 left-1/2 -translate-x-1/2 z-40
         hidden sm:block
         bg-black/20 backdrop-blur-lg rounded-full border border-white/20
-        shadow-xl px-6 py-2 w-[88%] max-w-3xl">
+        shadow-xl px-5 py-2 w-[92%] max-w-4xl">
 
         <div className="flex items-center justify-between w-full">
           <Link
@@ -50,7 +51,7 @@ export default function Header() {
           >
             Home
           </Link>
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-2.5 md:gap-4">
             <Link
               href="/about-us"
               className={`${baseBtn} ${normalizedPath === '/about-us' ? activeBtn : inactiveBtn}`}
@@ -75,39 +76,43 @@ export default function Header() {
             >
               Contact
             </Link>
+            <CountrySelector />
           </div>
         </div>
       </nav>
 
       {/* MOBILE TOPBAR — bare, no pill, only on < sm */}
-      <div className="fixed top-0 left-0 right-0 z-40 flex items-center justify-between px-4 py-2 sm:hidden">
+      <div className="fixed top-0 left-0 right-0 z-40 flex items-center justify-between px-4 py-2 sm:hidden bg-black/40 backdrop-blur-md border-b border-white/10">
         {/* Logo */}
         <Link href="/">
           <img
             src="/Nigapepic/nigape.svg"
             alt="Nigape Logo"
-            className="h-28 w-auto object-contain"
+            className="h-16 w-auto object-contain"
           />
         </Link>
 
-        {/* Hamburger */}
-        <button
-          onClick={() => setMenuOpen(!menuOpen)}
-          className="flex flex-col justify-center items-center gap-[5px] w-8 h-8 focus:outline-none"
-          aria-label="Toggle menu"
-        >
-          <span className={`block h-[2px] w-6 bg-white rounded-full transition-all duration-300 ${menuOpen ? "rotate-45 translate-y-[7px]" : ""}`} />
-          <span className={`block h-[2px] w-6 bg-white rounded-full transition-all duration-300 ${menuOpen ? "opacity-0" : ""}`} />
-          <span className={`block h-[2px] w-6 bg-white rounded-full transition-all duration-300 ${menuOpen ? "-rotate-45 -translate-y-[7px]" : ""}`} />
-        </button>
+        {/* Right tools (Country Selector + Hamburger) */}
+        <div className="flex items-center gap-2">
+          <CountrySelector />
+          <button
+            onClick={() => setMenuOpen(!menuOpen)}
+            className="flex flex-col justify-center items-center gap-[5px] w-8 h-8 focus:outline-none"
+            aria-label="Toggle menu"
+          >
+            <span className={`block h-[2px] w-6 bg-white rounded-full transition-all duration-300 ${menuOpen ? "rotate-45 translate-y-[7px]" : ""}`} />
+            <span className={`block h-[2px] w-6 bg-white rounded-full transition-all duration-300 ${menuOpen ? "opacity-0" : ""}`} />
+            <span className={`block h-[2px] w-6 bg-white rounded-full transition-all duration-300 ${menuOpen ? "-rotate-45 -translate-y-[7px]" : ""}`} />
+          </button>
+        </div>
       </div>
 
       {/* MOBILE DROPDOWN MENU */}
       <div
-        className={`fixed top-[96px] left-1/2 -translate-x-1/2 z-30 w-[88%] max-w-3xl
-          bg-black/80 backdrop-blur-lg border border-white/20 rounded-2xl
+        className={`fixed top-[70px] left-1/2 -translate-x-1/2 z-30 w-[92%] max-w-3xl
+          bg-black/90 backdrop-blur-xl border border-white/20 rounded-2xl
           overflow-hidden transition-all duration-300 sm:hidden
-          ${menuOpen ? "max-h-[300px] opacity-100 py-4" : "max-h-0 opacity-0 py-0"}`}
+          ${menuOpen ? "max-h-[360px] opacity-100 py-4" : "max-h-0 opacity-0 py-0"}`}
       >
         <div className="flex flex-col items-start gap-1 px-4">
           {navLinks.map((link) => (
