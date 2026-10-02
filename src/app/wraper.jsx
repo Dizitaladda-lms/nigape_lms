@@ -1,5 +1,6 @@
 'use client';
 
+import '@/lib/dom-patch';
 import { useState, useEffect } from 'react';
 import Loader from './Loader.jsx';
 

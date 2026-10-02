@@ -381,27 +381,42 @@ code, pre {
 }
 
 /* ============================================= */
-/* Google Translate Overrides                    */
+/* Google Translate Overrides & Top Banner Hide  */
 /* ============================================= */
+body {
+  top: 0px !important;
+  position: static !important;
+  margin-top: 0px !important;
+}
+
+/* Hide Google Translate top banner, toolbar, iframes, & popups */
 .goog-te-banner-frame,
+iframe.goog-te-banner-frame,
+.goog-te-banner,
 .goog-te-balloon-frame,
 #goog-gt-tt,
 .goog-te-spinner-pos,
-.goog-text-highlight {
-  display: none !important;
-}
-
-body {
-  top: 0 !important;
-  position: static !important;
-}
-
+.goog-text-highlight,
+.VIpgJd-ZJuic-O26lld,
+.VIpgJd-ZJuic-O26lld-v2,
+.VIpgJd-yZ3hHc-O26lld,
+.VIpgJd-ZJuic-O26lld-Ow5hb-n1tA2b,
+iframe[id^=":1"],
+iframe[id^=":2"],
+iframe[class*="goog"],
+body > .skiptranslate,
 .skiptranslate {
   display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+  height: 0 !important;
+  width: 0 !important;
 }
 
 #google_translate_element {
   display: none !important;
+  visibility: hidden !important;
 }
 
 .custom-scrollbar::-webkit-scrollbar {

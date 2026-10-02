@@ -119,8 +119,8 @@ export default function Iridescence({ color = [1, 1, 1], speed = 1.0, amplitude 
       if (mouseReact) {
         ctn.removeEventListener('mousemove', handleMouseMove);
       }
-      if (gl.canvas && gl.canvas.parentNode === ctn) {
-        ctn.removeChild(gl.canvas);
+      if (gl && gl.canvas && gl.canvas.parentNode) {
+        gl.canvas.parentNode.removeChild(gl.canvas);
       }
       gl.getExtension('WEBGL_lose_context')?.loseContext();
     };
