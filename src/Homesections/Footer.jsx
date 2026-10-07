@@ -155,11 +155,11 @@ export default function Footer() {
               <span className="text-xs uppercase tracking-[0.2em] text-[#FF40EB]">Location</span>
             </div>
 
-            <div className="overflow-hidden rounded-2xl border border-[#FF40EB]/30 bg-black/40 shadow-[0_0_30px_rgba(255,64,235,0.12)]">
+            <div className="overflow-hidden rounded-2xl border border-[#FF40EB]/30 bg-black/40 shadow-[0_0_30px_rgba(255,64,235,0.12)] max-w-md mx-auto">
               <iframe
                 src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3504.9308349192866!2d77.23825707549749!3d28.54179857571441!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x390ce31a443269bd%3A0x3439cdd587d60b18!2sNational%20Institute%20of%20Generative%20Ai%20%26%20Prompt%20Engineering!5e0!3m2!1sen!2sin!4v1790837393023!5m2!1sen!2sin"
                 width="100%"
-                height="280"
+                height="220"
                 style={{ border: 0 }}
                 allowFullScreen=""
                 loading="lazy"
