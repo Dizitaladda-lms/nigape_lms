@@ -65,7 +65,134 @@ const team = [
  
 ];
 
-
+const aboutSchema = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "AboutPage",
+      "@id": "https://www.nigape.com/about-us#webpage",
+      "url": "https://www.nigape.com/about-us",
+      "name": "Generative AI & Prompt Engineering Institute Delhi | NIGAPE",
+      "description": "Discover NIGAPE, a Delhi institute for Generative AI and Prompt Engineering with practical projects, expert mentorship, career support, and AI programs.",
+      "inLanguage": "en-IN",
+      "isPartOf": { "@id": "https://www.nigape.com/#website" },
+      "about": { "@id": "https://www.nigape.com/#organization" },
+      "mainEntity": { "@id": "https://www.nigape.com/#organization" },
+      "primaryImageOfPage": {
+        "@type": "ImageObject",
+        "url": "https://www.nigape.com/Nigapepic/nigape1.png"
+      },
+      "breadcrumb": { "@id": "https://www.nigape.com/about-us#breadcrumb" }
+    },
+    {
+      "@type": ["EducationalOrganization", "LocalBusiness"],
+      "@id": "https://www.nigape.com/#organization",
+      "name": "NIGAPE",
+      "alternateName": [
+        "National Institute of Generative AI & Prompt Engineering",
+        "NIGAPE GK2 Delhi"
+      ],
+      "url": "https://www.nigape.com/",
+      "logo": {
+        "@type": "ImageObject",
+        "@id": "https://www.nigape.com/#logo",
+        "url": "https://www.nigape.com/Nigapepic/nigape.svg",
+        "caption": "NIGAPE Logo"
+      },
+      "image": "https://www.nigape.com/Nigapepic/nigape1.png",
+      "description": "NIGAPE is an India-first Generative AI and Prompt Engineering institute in Delhi. Learners study through campus and online cohorts, build practical AI projects with expert mentorship, and graduate with career support and a portfolio built for AI hiring teams.",
+      "slogan": "Built for India's AI Future",
+      "telephone": "+91-7428114918",
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "GK2",
+        "addressLocality": "New Delhi",
+        "addressRegion": "Delhi",
+        "addressCountry": "IN"
+      },
+      "areaServed": [
+        { "@type": "City", "name": "Delhi" },
+        { "@type": "Country", "name": "India" }
+      ],
+      "contactPoint": [
+        {
+          "@type": "ContactPoint",
+          "telephone": "+91-7428114918",
+          "contactType": "admissions",
+          "areaServed": "IN",
+          "availableLanguage": ["English", "Hindi"],
+          "url": "https://www.nigape.com/contact-us"
+        }
+      ],
+      "knowsAbout": [
+        "Generative AI",
+        "Prompt Engineering",
+        "Large Language Models",
+        "AI Agents",
+        "AI Automation",
+        "Career-focused AI training"
+      ],
+      "founder": { "@id": "https://www.nigape.com/about-us#gulshan-kumar" },
+      "employee": [
+        { "@id": "https://www.nigape.com/about-us#gulshan-kumar" },
+        { "@id": "https://www.nigape.com/about-us#shagun" },
+        { "@id": "https://www.nigape.com/about-us#deepanshu" }
+      ],
+      "sameAs": [
+        "https://www.linkedin.com/in/national-institute-genai-and-prompt-engineering-116711381/",
+        "https://www.instagram.com/nigape.official/"
+      ]
+    },
+    {
+      "@type": "Person",
+      "@id": "https://www.nigape.com/about-us#gulshan-kumar",
+      "name": "Dr Gulshan Kumar",
+      "honorificPrefix": "Dr",
+      "jobTitle": "Founder & CEO",
+      "image": "https://www.nigape.com/gulshan-kumar.avif",
+      "worksFor": { "@id": "https://www.nigape.com/#organization" },
+      "url": "https://www.nigape.com/about-us"
+    },
+    {
+      "@type": "Person",
+      "@id": "https://www.nigape.com/about-us#shagun",
+      "name": "Shagun",
+      "honorificPrefix": "Miss",
+      "jobTitle": "AI Expert",
+      "image": "https://www.nigape.com/shagun.png",
+      "worksFor": { "@id": "https://www.nigape.com/#organization" },
+      "url": "https://www.nigape.com/about-us"
+    },
+    {
+      "@type": "Person",
+      "@id": "https://www.nigape.com/about-us#deepanshu",
+      "name": "Deepanshu",
+      "honorificPrefix": "Mr",
+      "jobTitle": "Data Analyst",
+      "image": "https://www.nigape.com/Nigapepic/me.webp",
+      "worksFor": { "@id": "https://www.nigape.com/#organization" },
+      "url": "https://www.nigape.com/about-us"
+    },
+    {
+      "@type": "BreadcrumbList",
+      "@id": "https://www.nigape.com/about-us#breadcrumb",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https://www.nigape.com/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "About Us",
+          "item": "https://www.nigape.com/about-us"
+        }
+      ]
+    }
+  ]
+};
 
 /**
  * Feature Card
@@ -169,35 +296,132 @@ export default function About() {
     };
   }, [updateCursor]);
 
-  const localBusinessSchema = {
+  const aboutSchema = {
     "@context": "https://schema.org",
-    "@type": "LocalBusiness",
-    "name": "National Institute of Generative Ai + Prompt Engineering",
-    "image": "https://nigape.com/Nigapepic/nigape.svg",
-    "@id": "",
-    "url": "https://nigape.com/",
-    "telephone": "+91 74281 14918",
-    "address": {
-      "@type": "PostalAddress",
-      "streetAddress": "2 Floor, Design House Spacetime, Greater Kailash-1, Block S, Greater Kailash I, Greater Kailash, New Delhi, Delhi 110048",
-      "addressLocality": "south delhi",
-      "postalCode": "110048",
-      "addressCountry": "IN"
-    },
-    "geo": {
-      "@type": "GeoCoordinates",
-      "latitude": 28.54821,
-      "longitude": 77.23797
-    },
-    "openingHoursSpecification": {
-      "@type": "OpeningHoursSpecification",
-      "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
-      "opens": "08:00",
-      "closes": "20:00"
-    },
-    "sameAs": [
-      "https://www.instagram.com/nigape.official/",
-      "https://in.linkedin.com/in/national-institute-genai-and-prompt-engineering-116711381"
+    "@graph": [
+      {
+        "@type": "AboutPage",
+        "@id": "https://www.nigape.com/about-us#webpage",
+        "url": "https://www.nigape.com/about-us",
+        "name": "Generative AI & Prompt Engineering Institute Delhi | NIGAPE",
+        "description": "Discover NIGAPE, a Delhi institute for Generative AI and Prompt Engineering with practical projects, expert mentorship, career support, and AI programs.",
+        "inLanguage": "en-IN",
+        "isPartOf": { "@id": "https://www.nigape.com/#website" },
+        "about": { "@id": "https://www.nigape.com/#organization" },
+        "mainEntity": { "@id": "https://www.nigape.com/#organization" },
+        "primaryImageOfPage": {
+          "@type": "ImageObject",
+          "url": "https://www.nigape.com/Nigapepic/nigape1.png"
+        },
+        "breadcrumb": { "@id": "https://www.nigape.com/about-us#breadcrumb" }
+      },
+      {
+        "@type": ["EducationalOrganization", "LocalBusiness"],
+        "@id": "https://www.nigape.com/#organization",
+        "name": "NIGAPE",
+        "alternateName": [
+          "National Institute of Generative AI & Prompt Engineering",
+          "NIGAPE GK2 Delhi"
+        ],
+        "url": "https://www.nigape.com/",
+        "logo": {
+          "@type": "ImageObject",
+          "@id": "https://www.nigape.com/#logo",
+          "url": "https://www.nigape.com/Nigapepic/nigape.svg",
+          "caption": "NIGAPE Logo"
+        },
+        "image": "https://www.nigape.com/Nigapepic/nigape1.png",
+        "description": "NIGAPE is an India-first Generative AI and Prompt Engineering institute in Delhi. Learners study through campus and online cohorts, build practical AI projects with expert mentorship, and graduate with career support and a portfolio built for AI hiring teams.",
+        "slogan": "Built for India's AI Future",
+        "telephone": "+91-7428114918",
+        "address": {
+          "@type": "PostalAddress",
+          "streetAddress": "GK2",
+          "addressLocality": "New Delhi",
+          "addressRegion": "Delhi",
+          "addressCountry": "IN"
+        },
+        "areaServed": [
+          { "@type": "City", "name": "Delhi" },
+          { "@type": "Country", "name": "India" }
+        ],
+        "contactPoint": [
+          {
+            "@type": "ContactPoint",
+            "telephone": "+91-7428114918",
+            "contactType": "admissions",
+            "areaServed": "IN",
+            "availableLanguage": ["English", "Hindi"],
+            "url": "https://www.nigape.com/contact-us"
+          }
+        ],
+        "knowsAbout": [
+          "Generative AI",
+          "Prompt Engineering",
+          "Large Language Models",
+          "AI Agents",
+          "AI Automation",
+          "Career-focused AI training"
+        ],
+        "founder": { "@id": "https://www.nigape.com/about-us#gulshan-kumar" },
+        "employee": [
+          { "@id": "https://www.nigape.com/about-us#gulshan-kumar" },
+          { "@id": "https://www.nigape.com/about-us#shagun" },
+          { "@id": "https://www.nigape.com/about-us#deepanshu" }
+        ],
+        "sameAs": [
+          "https://www.linkedin.com/in/national-institute-genai-and-prompt-engineering-116711381/",
+          "https://www.instagram.com/nigape.official/"
+        ]
+      },
+      {
+        "@type": "Person",
+        "@id": "https://www.nigape.com/about-us#gulshan-kumar",
+        "name": "Dr Gulshan Kumar",
+        "honorificPrefix": "Dr",
+        "jobTitle": "Founder & CEO",
+        "image": "https://www.nigape.com/gulshan-kumar.avif",
+        "worksFor": { "@id": "https://www.nigape.com/#organization" },
+        "url": "https://www.nigape.com/about-us"
+      },
+      {
+        "@type": "Person",
+        "@id": "https://www.nigape.com/about-us#shagun",
+        "name": "Shagun",
+        "honorificPrefix": "Miss",
+        "jobTitle": "AI Expert",
+        "image": "https://www.nigape.com/shagun.png",
+        "worksFor": { "@id": "https://www.nigape.com/#organization" },
+        "url": "https://www.nigape.com/about-us"
+      },
+      {
+        "@type": "Person",
+        "@id": "https://www.nigape.com/about-us#deepanshu",
+        "name": "Deepanshu",
+        "honorificPrefix": "Mr",
+        "jobTitle": "Data Analyst",
+        "image": "https://www.nigape.com/Nigapepic/me.webp",
+        "worksFor": { "@id": "https://www.nigape.com/#organization" },
+        "url": "https://www.nigape.com/about-us"
+      },
+      {
+        "@type": "BreadcrumbList",
+        "@id": "https://www.nigape.com/about-us#breadcrumb",
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "Home",
+            "item": "https://www.nigape.com/"
+          },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "About Us",
+            "item": "https://www.nigape.com/about-us"
+          }
+        ]
+      }
     ]
   };
 
@@ -205,7 +429,7 @@ export default function About() {
     <>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(localBusinessSchema) }}
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(aboutSchema) }}
       />
       {/* Floating Cursor Glow */}
       <div

@@ -135,7 +135,7 @@ export default function Footer() {
                   { label: "Terms & Conditions", href: "/terms-and-conditions" },
                   { label: "Disclaimer", href: "/disclaimer" },
                   { label: "Sitemap XML", href: "/sitemap.xml" },
-                  { label: "Sitemap HTML", href: "/sitemap.html" },
+                  { label: "Sitemap", href: "/sitemap" },
                 ].map((item) => (
                   <li key={item.href}>
                     <Link href={item.href}

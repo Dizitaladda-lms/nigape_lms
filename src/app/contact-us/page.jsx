@@ -174,6 +174,118 @@ export default function ContactPage() {
 
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify({
+          "@context": "https://schema.org",
+          "@graph": [
+            {
+              "@type": "ContactPage",
+              "@id": "https://www.nigape.com/contact-us#webpage",
+              "url": "https://www.nigape.com/contact-us",
+              "name": "Generative AI & Prompt Engineering Course Contact | NIGAPE",
+              "description": "Contact NIGAPE for Generative AI and Prompt Engineering courses in Delhi. Get fees, batches, syllabus, admission, registration, and career guidance from our team.",
+              "inLanguage": "en-IN",
+              "isPartOf": { "@id": "https://www.nigape.com/#website" },
+              "about": { "@id": "https://www.nigape.com/#organization" },
+              "mainEntity": { "@id": "https://www.nigape.com/#organization" },
+              "primaryImageOfPage": {
+                "@type": "ImageObject",
+                "url": "https://www.nigape.com/Nigapepic/nigape1.png"
+              },
+              "breadcrumb": { "@id": "https://www.nigape.com/contact-us#breadcrumb" }
+            },
+            {
+              "@type": ["EducationalOrganization", "LocalBusiness"],
+              "@id": "https://www.nigape.com/#organization",
+              "name": "NIGAPE",
+              "alternateName": [
+                "National Institute of Generative AI & Prompt Engineering",
+                "NIGAPE GK2 Delhi"
+              ],
+              "url": "https://www.nigape.com/",
+              "logo": {
+                "@type": "ImageObject",
+                "@id": "https://www.nigape.com/#logo",
+                "url": "https://www.nigape.com/Nigapepic/nigape.svg",
+                "caption": "NIGAPE Logo"
+              },
+              "image": "https://www.nigape.com/Nigapepic/nigape1.png",
+              "description": "India-first institute dedicated to Generative AI and Prompt Engineering careers, offering mentor-led, project-based programs in Delhi and online.",
+              "telephone": "+91-7428114918",
+              "address": {
+                "@type": "PostalAddress",
+                "streetAddress": "Spacetime GK2, near Savitri Cinema Complex",
+                "addressLocality": "New Delhi",
+                "addressRegion": "Delhi",
+                "postalCode": "110048",
+                "addressCountry": "IN"
+              },
+              "location": {
+                "@type": "Place",
+                "name": "NIGAPE Campus, Spacetime GK2",
+                "address": {
+                  "@type": "PostalAddress",
+                  "streetAddress": "Spacetime GK2, near Savitri Cinema Complex",
+                  "addressLocality": "New Delhi",
+                  "addressRegion": "Delhi",
+                  "postalCode": "110048",
+                  "addressCountry": "IN"
+                }
+              },
+              "areaServed": [
+                { "@type": "City", "name": "Delhi" },
+                { "@type": "Country", "name": "India" }
+              ],
+              "contactPoint": [
+                {
+                  "@type": "ContactPoint",
+                  "contactType": "admissions",
+                  "telephone": "+91-7428114918",
+                  "areaServed": "IN",
+                  "availableLanguage": ["English", "Hindi"],
+                  "url": "https://www.nigape.com/contact-us"
+                },
+                {
+                  "@type": "ContactPoint",
+                  "contactType": "customer support",
+                  "telephone": "+91-7428114918",
+                  "areaServed": "IN",
+                  "availableLanguage": ["English", "Hindi"],
+                  "url": "https://wa.me/917428114918"
+                }
+              ],
+              "potentialAction": {
+                "@type": "CommunicateAction",
+                "name": "Request Counseling Call",
+                "target": "https://www.nigape.com/contact-us"
+              },
+              "sameAs": [
+                "https://www.linkedin.com/in/national-institute-genai-and-prompt-engineering-116711381/",
+                "https://www.instagram.com/nigape.official/"
+              ]
+            },
+            {
+              "@type": "BreadcrumbList",
+              "@id": "https://www.nigape.com/contact-us#breadcrumb",
+              "itemListElement": [
+                {
+                  "@type": "ListItem",
+                  "position": 1,
+                  "name": "Home",
+                  "item": "https://www.nigape.com/"
+                },
+                {
+                  "@type": "ListItem",
+                  "position": 2,
+                  "name": "Contact Us",
+                  "item": "https://www.nigape.com/contact-us"
+                }
+              ]
+            }
+          ]
+        }) }}
+      />
       {/* Background */}
       <div className="fixed inset-0 -z-10 overflow-hidden">
         <Iridescence

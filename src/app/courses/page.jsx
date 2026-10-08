@@ -6,6 +6,257 @@ import { courses as dataCourses } from "../../Data/data";
 
 const courses = Array.isArray(dataCourses) ? dataCourses : [];
 
+const coursePageSchema = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "CollectionPage",
+      "@id": "https://www.nigape.com/courses#webpage",
+      "url": "https://www.nigape.com/courses",
+      "name": "GenAI & Prompt Engineering Courses in Delhi | NIGAPE",
+      "description": "Compare NIGAPE Generative AI and Prompt Engineering courses in Delhi, from AI literacy to advanced programs, with projects, mentorship, certification, and career support.",
+      "inLanguage": "en-IN",
+      "isPartOf": {
+        "@id": "https://www.nigape.com/#website"
+      },
+      "about": {
+        "@id": "https://www.nigape.com/#organization"
+      },
+      "primaryImageOfPage": {
+        "@type": "ImageObject",
+        "url": "https://www.nigape.com/group/group_final.webp"
+      },
+      "breadcrumb": {
+        "@id": "https://www.nigape.com/courses#breadcrumb"
+      },
+      "mainEntity": {
+        "@id": "https://www.nigape.com/courses#course-list"
+      }
+    },
+    {
+      "@type": ["EducationalOrganization", "LocalBusiness"],
+      "@id": "https://www.nigape.com/#organization",
+      "name": "NIGAPE",
+      "url": "https://www.nigape.com/",
+      "logo": {
+        "@type": "ImageObject",
+        "@id": "https://www.nigape.com/#logo",
+        "url": "https://www.nigape.com/Nigapepic/nigape.svg"
+      },
+      "image": "https://www.nigape.com/Nigapepic/nigape1.png",
+      "telephone": "+91-7428114918",
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "GK2",
+        "addressLocality": "New Delhi",
+        "addressRegion": "Delhi",
+        "addressCountry": "IN"
+      },
+      "sameAs": [
+        "https://www.linkedin.com/in/national-institute-genai-and-prompt-engineering-116711381/",
+        "https://www.instagram.com/nigape.official/"
+      ]
+    },
+    {
+      "@type": "ItemList",
+      "@id": "https://www.nigape.com/courses#course-list",
+      "name": "NIGAPE Generative AI & Prompt Engineering Courses",
+      "description": "8 programs for students, graduates, and professionals.",
+      "numberOfItems": 8,
+      "itemListOrder": "https://schema.org/ItemListUnordered",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "url": "https://www.nigape.com/courses/diploma-in-generative-ai-prompt-engineering",
+          "item": {
+            "@type": "Course",
+            "@id": "https://www.nigape.com/courses/diploma-in-generative-ai-prompt-engineering#course",
+            "name": "Diploma in Generative AI & Prompt Engineering",
+            "description": "Perfect for beginners, 12th-pass students, and career switchers. Build strong foundations in AI/ML, Python, prompt engineering, LLMs, RAG, and hands-on projects in text, vision, and multimodal AI with portfolio and placement support.",
+            "url": "https://www.nigape.com/courses/diploma-in-generative-ai-prompt-engineering",
+            "provider": {
+              "@id": "https://www.nigape.com/#organization"
+            },
+            "inLanguage": "en",
+            "educationalLevel": "Beginner",
+            "timeRequired": "P12M",
+            "hasCourseInstance": {
+              "@type": "CourseInstance",
+              "courseMode": ["Onsite", "Online"]
+            }
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "url": "https://www.nigape.com/courses/advanced-generative-ai-prompt-engineering",
+          "item": {
+            "@type": "Course",
+            "@id": "https://www.nigape.com/courses/advanced-generative-ai-prompt-engineering#course",
+            "name": "Advanced Generative AI & Prompt Engineering",
+            "description": "Master advanced LLMs, prompt engineering, AI agents, RAG, automation, and enterprise-grade Generative AI through real projects designed for career-ready skills.",
+            "url": "https://www.nigape.com/courses/advanced-generative-ai-prompt-engineering",
+            "provider": {
+              "@id": "https://www.nigape.com/#organization"
+            },
+            "inLanguage": "en",
+            "educationalLevel": "Advanced",
+            "timeRequired": "P6M",
+            "hasCourseInstance": {
+              "@type": "CourseInstance",
+              "courseMode": ["Onsite", "Online"]
+            }
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "url": "https://www.nigape.com/courses/ai-literacy-for-everyone",
+          "item": {
+            "@type": "Course",
+            "@id": "https://www.nigape.com/courses/ai-literacy-for-everyone#course",
+            "name": "AI Literacy for Everyone",
+            "description": "No coding required. Learn essential AI concepts, practical prompting, and real-world applications for students and non-tech professionals.",
+            "url": "https://www.nigape.com/courses/ai-literacy-for-everyone",
+            "provider": {
+              "@id": "https://www.nigape.com/#organization"
+            },
+            "inLanguage": "en",
+            "educationalLevel": "Beginner",
+            "timeRequired": "P1M15D",
+            "hasCourseInstance": {
+              "@type": "CourseInstance",
+              "courseMode": ["Onsite", "Online"]
+            }
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 4,
+          "url": "https://www.nigape.com/courses/generative-ai-for-professionals",
+          "item": {
+            "@type": "Course",
+            "@id": "https://www.nigape.com/courses/generative-ai-for-professionals#course",
+            "name": "Generative AI for Professionals",
+            "description": "Practical GenAI skills for working professionals. Learn to apply generative AI in business: text, image, data analysis, automation, and decision-making.",
+            "url": "https://www.nigape.com/courses/generative-ai-for-professionals",
+            "provider": {
+              "@id": "https://www.nigape.com/#organization"
+            },
+            "inLanguage": "en",
+            "educationalLevel": "Intermediate",
+            "timeRequired": "P4M",
+            "hasCourseInstance": {
+              "@type": "CourseInstance",
+              "courseMode": ["Onsite", "Online"]
+            }
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 5,
+          "url": "https://www.nigape.com/courses/nlp-professional",
+          "item": {
+            "@type": "Course",
+            "@id": "https://www.nigape.com/courses/nlp-professional#course",
+            "name": "NLP Professional",
+            "description": "Master Natural Language Processing, from text processing to transformer models and real-world NLP applications.",
+            "url": "https://www.nigape.com/courses/nlp-professional",
+            "provider": {
+              "@id": "https://www.nigape.com/#organization"
+            },
+            "inLanguage": "en",
+            "hasCourseInstance": {
+              "@type": "CourseInstance",
+              "courseMode": ["Onsite", "Online"]
+            }
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 6,
+          "url": "https://www.nigape.com/courses/computer-vision-professional",
+          "item": {
+            "@type": "Course",
+            "@id": "https://www.nigape.com/courses/computer-vision-professional#course",
+            "name": "Computer Vision Professional",
+            "description": "Master computer vision: CNNs, object detection, segmentation, image generation, and real-world CV projects.",
+            "url": "https://www.nigape.com/courses/computer-vision-professional",
+            "provider": {
+              "@id": "https://www.nigape.com/#organization"
+            },
+            "inLanguage": "en",
+            "hasCourseInstance": {
+              "@type": "CourseInstance",
+              "courseMode": ["Onsite", "Online"]
+            }
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 7,
+          "url": "https://www.nigape.com/courses/deep-learning-professional",
+          "item": {
+            "@type": "Course",
+            "@id": "https://www.nigape.com/courses/deep-learning-professional#course",
+            "name": "Deep Learning Professional",
+            "description": "In-depth deep learning: neural networks, CNNs, RNNs, GANs, transformers, reinforcement learning basics, and large model architectures.",
+            "url": "https://www.nigape.com/courses/deep-learning-professional",
+            "provider": {
+              "@id": "https://www.nigape.com/#organization"
+            },
+            "inLanguage": "en",
+            "hasCourseInstance": {
+              "@type": "CourseInstance",
+              "courseMode": ["Onsite", "Online"]
+            }
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 8,
+          "url": "https://www.nigape.com/courses/advanced-certification-in-generative-ai-prompt-engineering",
+          "item": {
+            "@type": "Course",
+            "@id": "https://www.nigape.com/courses/advanced-certification-in-generative-ai-prompt-engineering#course",
+            "name": "Advanced Certification in Generative AI & Prompt Engineering",
+            "description": "An industry-recognized certification for learners who want to master Generative AI and Prompt Engineering with hands-on projects, LLM fine-tuning, and real-world deployment skills.",
+            "url": "https://www.nigape.com/courses/advanced-certification-in-generative-ai-prompt-engineering",
+            "provider": {
+              "@id": "https://www.nigape.com/#organization"
+            },
+            "inLanguage": "en",
+            "educationalLevel": "Advanced",
+            "hasCourseInstance": {
+              "@type": "CourseInstance",
+              "courseMode": ["Onsite", "Online"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "@type": "BreadcrumbList",
+      "@id": "https://www.nigape.com/courses#breadcrumb",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https://www.nigape.com/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Courses",
+          "item": "https://www.nigape.com/courses"
+        }
+      ]
+    }
+  ]
+};
+
 const categories = [
   { id: "all", label: "All Courses" },
   { id: "engineering", label: "Engineering" },
@@ -217,6 +468,14 @@ export default function CoursesPage() {
 
   return (
     <div className="min-h-screen pt-20 bg-black text-white overflow-hidden">
+      <meta
+        name="description"
+        content="Compare NIGAPE Generative AI and Prompt Engineering courses in Delhi, from AI literacy to advanced programs, with projects, mentorship, certification, and career support."
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(coursePageSchema) }}
+      />
 
       {/* Hero */}
       <section className="relative py-6 lg:py-10 lg:pb-20 px-6 bg-black/40 backdrop-blur-md">
