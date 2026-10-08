@@ -1,5 +1,6 @@
 import { courses } from "@/Data/data";
 import prisma from "@/lib/prisma";
+import { getSiteUrl } from "@/lib/site-url";
 
 const staticPages = [
   { path: "/", title: "Home", priority: 1 },
@@ -17,7 +18,7 @@ const staticPages = [
 ];
 
 export async function getSitemapData() {
-  const baseUrl = (process.env.NEXT_PUBLIC_APP_URL || "https://www.nigape.com").replace(/\/+$/, "");
+  const baseUrl = getSiteUrl();
   const generatedAt = new Date();
   const blogs = await prisma.blog.findMany({
     where: { published: true },

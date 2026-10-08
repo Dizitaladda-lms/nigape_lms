@@ -1,3 +1,5 @@
+import { getSiteUrl } from "@/lib/site-url";
+
 const aiCrawlers = [
   "GPTBot",
   "ChatGPT-User",
@@ -13,7 +15,7 @@ const aiCrawlers = [
 ];
 
 export default function robots() {
-  const baseUrl = (process.env.NEXT_PUBLIC_APP_URL || "https://www.nigape.com").replace(/\/+$/, "");
+  const baseUrl = getSiteUrl();
   return {
     rules: [
       { userAgent: "*", allow: "/", disallow: ["/admin", "/api"] },
