@@ -1,12 +1,3 @@
-// TestimonialsSection.tsx
-"use client";
-import React from 'react';
-import { Swiper, SwiperSlide } from 'swiper/react';
-import { Autoplay, Pagination, Navigation } from 'swiper/modules';
-import 'swiper/css';
-import 'swiper/css/pagination';
-import 'swiper/css/navigation';
-
 const TestimonialsSection = () => {
   const testimonials = [
     {
@@ -82,75 +73,66 @@ const TestimonialsSection = () => {
           Testimonials
         </h2>
 
-        <Swiper
-          modules={[Autoplay, Pagination, Navigation]}
-          slidesPerView={1}
-          spaceBetween={24}
-          loop={true}
-          autoplay={{ delay: 3500, disableOnInteraction: false }}
-          pagination={{ clickable: true }}
-          navigation={true}
-          breakpoints={{
-            640: { slidesPerView: 1 },
-            768: { slidesPerView: 2 },
-            1024: { slidesPerView: 3 },
-          }}
-          className="pb-12"
+        <div
+          role="region"
+          aria-label="Testimonials"
+          className="flex snap-x snap-mandatory gap-6 overflow-x-auto overscroll-x-contain pb-12"
         >
           {testimonials.map((t, index) => (
-            <SwiperSlide key={index} className="h-auto">
-              <div className="relative w-full overflow-visible flex flex-col h-full pb-2">
-                {/* Background shadow layers */}
-                <div className="absolute inset-0 bg-white rounded-xl shadow-lg opacity-30 transform translate-x-1 translate-y-1 md:translate-x-2 md:translate-y-2" />
-                <div className="absolute inset-0 bg-white rounded-xl shadow-lg opacity-50 transform translate-x-0 translate-y-0 md:translate-x-1 md:translate-y-1" />
+            <article
+              key={index}
+              className="relative flex h-auto min-w-0 flex-[0_0_100%] snap-start flex-col overflow-visible pb-2 sm:flex-[0_0_calc((100%-1.5rem)/2)] lg:flex-[0_0_calc((100%-3rem)/3)]"
+            >
+              {/* Background shadow layers */}
+              <div className="absolute inset-0 bg-white rounded-xl shadow-lg opacity-30 transform translate-x-1 translate-y-1 md:translate-x-2 md:translate-y-2" />
+              <div className="absolute inset-0 bg-white rounded-xl shadow-lg opacity-50 transform translate-x-0 translate-y-0 md:translate-x-1 md:translate-y-1" />
 
-                {/* Main card */}
-                <div className="relative bg-white rounded-xl shadow-xl p-4 md:p-6 z-10 flex flex-col h-full">
-                  {/* Top NIGAPE tab */}
-                  <div className="absolute -top-5 left-1/2 transform -translate-x-1/2 w-20 h-7 sm:-top-6 sm:w-24 sm:h-8 bg-white rounded-t-lg border border-gray-200 flex items-center justify-center">
-                    <span className="text-sm sm:text-lg font-bold text-[#9234eb]">NIGAPE</span>
-                  </div>
+              {/* Main card */}
+              <div className="relative bg-white rounded-xl shadow-xl p-4 md:p-6 z-10 flex flex-col h-full">
+                {/* Top NIGAPE tab */}
+                <div className="absolute -top-5 left-1/2 transform -translate-x-1/2 w-20 h-7 sm:-top-6 sm:w-24 sm:h-8 bg-white rounded-t-lg border border-gray-200 flex items-center justify-center">
+                  <span className="text-sm sm:text-lg font-bold text-[#9234eb]">NIGAPE</span>
+                </div>
 
-                  {/* Quote mark */}
-                  <div className="text-2xl md:text-3xl text-[#9234eb] mb-4">"</div>
+                {/* Quote mark */}
+                <div className="text-2xl md:text-3xl text-[#9234eb] mb-4">&quot;</div>
 
-                  {/* Quote text */}
-                  <p
-                    className="text-gray-700 leading-relaxed text-sm md:text-base flex-1"
-                    dangerouslySetInnerHTML={{ __html: t.quote }}
-                  />
+                {/* Quote text */}
+                <p
+                  className="text-gray-700 leading-relaxed text-sm md:text-base flex-1"
+                  dangerouslySetInnerHTML={{ __html: t.quote }}
+                />
 
-                  {/* Footer */}
-                  <div className="mt-auto flex items-center justify-between pt-4 border-t border-gray-100">
-                    <div className="flex items-center space-x-3">
-                      <img
-                        src={t.avatarUrl.trim()}
-                        alt={t.name}
-                        className="w-10 h-10 rounded-full object-cover"
-                      />
-                      <div>
-                        <p className="font-semibold text-gray-900">{t.name}</p>
-                        <p className="text-sm text-gray-500">{t.role}</p>
-                      </div>
+                {/* Footer */}
+                <div className="mt-auto flex items-center justify-between pt-4 border-t border-gray-100">
+                  <div className="flex items-center space-x-3">
+                    <img
+                      src={t.avatarUrl.trim()}
+                      alt={t.name}
+                      className="w-10 h-10 rounded-full object-cover"
+                    />
+                    <div>
+                      <p className="font-semibold text-gray-900">{t.name}</p>
+                      <p className="text-sm text-gray-500">{t.role}</p>
                     </div>
-
-                    <a
-                      href={t.linkedinUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-gray-400 hover:text-[#9234eb] transition-colors"
-                      aria-label={`${t.name} on LinkedIn`}
-                    >
-                      <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M20.447 20.452h-3.55v-5.895c0-1.405-.027-3.199-1.95-3.199-1.95 0-2.256 1.514-2.256 3.089v6.005H5.59V8.91h3.49v1.664h.05c1.128-1.91 3.089-2.89 5.02-2.89 5.338 0 6.33 3.526 6.33 8.124v7.644zM2.59 0h3.55v11.49H2.59V0z" />
-                      </svg>
-                    </a>
                   </div>
+
+                  <a
+                    href={t.linkedinUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-gray-400 hover:text-[#9234eb] transition-colors"
+                    aria-label={`${t.name} on LinkedIn`}
+                  >
+                    <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+                      <path d="M20.447 20.452h-3.55v-5.895c0-1.405-.027-3.199-1.95-3.199-1.95 0-2.256 1.514-2.256 3.089v6.005H5.59V8.91h3.49v1.664h.05c1.128-1.91 3.089-2.89 5.02-2.89 5.338 0 6.33 3.526 6.33 8.124v7.644zM2.59 0h3.55v11.49H2.59V0z" />
+                    </svg>
+                  </a>
                 </div>
               </div>
-            </SwiperSlide>
+            </article>
           ))}
-        </Swiper>
+        </div>
       </div>
     </section>
   );
