@@ -55,6 +55,9 @@ const BlogForm = ({ initialData = null, mode = "create" }) => {
   const [formValues, setFormValues] = useState(() => ({
     ...baseState,
     ...initialData,
+    title: initialData?.title ?? "",
+    slug: initialData?.slug ?? "",
+    coverImg: initialData?.coverImg ?? "",
     tags: Array.isArray(initialData?.tags) ? initialData.tags.join(", ") : (initialData?.tags || ""),
     content: initialData?.content || "",
     excerpt: initialData?.excerpt || "",
