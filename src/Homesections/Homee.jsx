@@ -1,9 +1,10 @@
 import Link from "next/link";
+import HeroBackground from "@/Homesections/HeroBackground";
 
 export default function Homee() {
   return (
     <div className="relative min-h-screen w-full overflow-hidden bg-black text-white">
-      <div className="hero-aurora absolute inset-0 z-0" aria-hidden="true" />
+      <HeroBackground />
       <div
         className="absolute inset-0 z-[1] bg-gradient-to-b from-black/90 via-transparent to-black/90"
         aria-hidden="true"
