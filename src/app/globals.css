@@ -74,6 +74,14 @@ body {
   font-weight: 400;
 }
 
+.hero-aurora {
+  background:
+    radial-gradient(ellipse at 50% 38%, rgb(147 51 234 / 35%), transparent 48%),
+    radial-gradient(ellipse at 16% 24%, rgb(255 64 235 / 20%), transparent 38%),
+    radial-gradient(ellipse at 84% 72%, rgb(34 211 238 / 14%), transparent 42%),
+    #050008;
+}
+
 h1, h2, h3 {
   font-weight: 600;
   letter-spacing: -0.02em;

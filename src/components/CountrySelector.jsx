@@ -23,68 +23,53 @@ export const COUNTRIES = [
   { code: "AU", name: "Australia", flag: "🇦🇺", lang: "en", label: "English" },
 ];
 
+const loadGoogleTranslate = () => {
+  if (window.googleTranslateElementInit) {
+    return;
+  }
+
+  if (!document.getElementById("google_translate_element")) {
+    const container = document.createElement("div");
+    container.id = "google_translate_element";
+    container.style.display = "none";
+    document.body.appendChild(container);
+  }
+
+  window.googleTranslateElementInit = () => {
+    new window.google.translate.TranslateElement(
+      {
+        pageLanguage: "en",
+        autoDisplay: false,
+        includedLanguages: "en,hi,ar,fr,de,es,it,ja,ko,zh-CN,ru,pt",
+      },
+      "google_translate_element"
+    );
+  };
+
+  const script = document.createElement("script");
+  script.src = "https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit";
+  script.async = true;
+  document.body.appendChild(script);
+};
+
 export default function CountrySelector({ isMobile = false }) {
   const [selected, setSelected] = useState(COUNTRIES[0]); // Default India (EN)
   const [isOpen, setIsOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const dropdownRef = useRef(null);
 
-  // Initialize selected country from localStorage & load Google Translate script
+  // Restore the saved locale; only load translation support when it is needed.
   useEffect(() => {
     const savedCode = localStorage.getItem("selected_country_code");
     if (savedCode) {
       const found = COUNTRIES.find((c) => c.code === savedCode);
       if (found) {
         setSelected(found);
+        if (found.lang !== "en") {
+          loadGoogleTranslate();
+        }
       }
     }
-
-    // Add hidden google translate element container if missing
-    if (!document.getElementById("google_translate_element")) {
-      const gdiv = document.createElement("div");
-      gdiv.id = "google_translate_element";
-      gdiv.style.display = "none";
-      document.body.appendChild(gdiv);
-    }
-
-    // Load Google Translate script
-    if (!window.googleTranslateElementInit) {
-      window.googleTranslateElementInit = () => {
-        new window.google.translate.TranslateElement(
-          {
-            pageLanguage: "en",
-            autoDisplay: false,
-            includedLanguages: "en,hi,ar,fr,de,es,it,ja,ko,zh-CN,ru,pt",
-          },
-          "google_translate_element"
-        );
-      };
-
-      const script = document.createElement("script");
-      script.src = "//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit";
-      script.async = true;
-      document.body.appendChild(script);
-    }
-  }, []);
-
-  // Automatically strip out Google Translate top banner frame if injected
-  useEffect(() => {
-    const cleanBanners = () => {
-      const bannerFrames = document.querySelectorAll(
-        ".goog-te-banner-frame, iframe.goog-te-banner-frame, .VIpgJd-ZJuic-O26lld, iframe[id^=':']"
-      );
-      bannerFrames.forEach((frame) => {
-        frame.style.display = "none";
-        frame.style.visibility = "hidden";
-        frame.style.height = "0";
-      });
-      if (document.body.style.top !== "0px" && document.body.style.top !== "") {
-        document.body.style.top = "0px";
-      }
-    };
-
-    const interval = setInterval(cleanBanners, 300);
-    return () => clearInterval(interval);
   }, []);
 
   // Close dropdown on click outside
