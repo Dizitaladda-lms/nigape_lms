@@ -44,6 +44,7 @@ const BlogCard = ({ blog, baseUrl }) => {
             sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 400px"
             style={{ objectFit: "cover", objectPosition: "center" }}
             unoptimized={isExternal}
+            loading="lazy"
             className="group-hover:scale-105 transition-transform duration-500"
           />
         ) : (
@@ -74,7 +75,7 @@ const BlogCard = ({ blog, baseUrl }) => {
         </h3>
 
         {/* Excerpt */}
-        <p className="text-white/50 text-sm leading-relaxed line-clamp-3 flex-1">{toExcerpt(blog.content)}</p>
+        <p className="text-white/50 text-sm leading-relaxed line-clamp-3 flex-1">{blog.excerpt || toExcerpt(blog.content)}</p>
 
         {/* Tags */}
         {tags.length > 0 && (

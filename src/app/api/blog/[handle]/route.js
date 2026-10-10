@@ -5,6 +5,7 @@ import { normalizeTags } from "@/lib/tags";
 import { ensureAdminApi } from "@/lib/auth";
 import { recordAudit } from "@/lib/audit";
 import { getClientIp } from "@/lib/request-info";
+import { invalidateBlogListingCache } from "@/lib/blogs";
 
 const resolveLookup = async (handle, lookup) => {
   if (lookup === "id") {
@@ -66,6 +67,16 @@ export async function PUT(request, context) {
     const resolvedSlug = await generateUniqueSlug(slug || title, params.handle);
     const preparedTags = normalizeTags(tags);
 
+    const safeExcerpt =
+      excerpt?.trim() ||
+      (content
+        ? content
+            .replace(/<[^>]+>/g, " ")
+            .replace(/\s+/g, " ")
+            .trim()
+            .slice(0, 160) + "..."
+        : null);
+
     const updated = await prisma.blog.update({
       where: { id: params.handle },
       data: {
@@ -74,7 +85,7 @@ export async function PUT(request, context) {
         coverImg: coverImg?.trim() || null,
         tags: preparedTags,
         slug: resolvedSlug,
-        excerpt: excerpt?.trim() || null,
+        excerpt: safeExcerpt,
         author: author?.trim() || null,
         metaTitle: metaTitle?.trim() || null,
         metaDescription: metaDescription?.trim() || null,
@@ -82,6 +93,8 @@ export async function PUT(request, context) {
         published: published !== false,
       },
     });
+
+    invalidateBlogListingCache();
 
     const ip = await getClientIp(request);
     await recordAudit("blog.update", {
@@ -111,6 +124,7 @@ export async function DELETE(request, context) {
     }
 
     const deleted = await prisma.blog.delete({ where: { id: params.handle } });
+    invalidateBlogListingCache();
     const ip = await getClientIp(request);
     await recordAudit("blog.delete", {
       actor: session.sub,

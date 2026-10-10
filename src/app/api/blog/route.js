@@ -5,94 +5,34 @@ import { normalizeTags } from "@/lib/tags";
 import { ensureAdminApi } from "@/lib/auth";
 import { recordAudit } from "@/lib/audit";
 import { getClientIp } from "@/lib/request-info";
-
-const DEFAULT_LIMIT = 18;
-const MAX_LIMIT = 50;
+import { getBlogListing, invalidateBlogListingCache } from "@/lib/blogs";
 
 export async function GET(request) {
   try {
     const { searchParams } = new URL(request.url);
     const page = Number(searchParams.get("page")) || 1;
-    const limitParam = Number(searchParams.get("limit")) || DEFAULT_LIMIT;
-    const limit = Math.min(Math.max(limitParam, 1), MAX_LIMIT);
-    const search = searchParams.get("search")?.trim();
-    const tag = searchParams.get("tag")?.trim();
-    const relatedTo = searchParams.get("relatedTo")?.trim();
-    const excludeId = searchParams.get("excludeId")?.trim();
-    const excludeSlug = searchParams.get("excludeSlug")?.trim();
+    const limit = Number(searchParams.get("limit")) || 18;
+    const search = searchParams.get("search") || "";
+    const tag = searchParams.get("tag") || "";
+    const relatedTo = searchParams.get("relatedTo") || "";
+    const excludeId = searchParams.get("excludeId") || "";
+    const excludeSlug = searchParams.get("excludeSlug") || "";
 
-    const filters = [];
-    const excludedIds = [];
+    const result = await getBlogListing({
+      page,
+      limit,
+      search,
+      tag,
+      relatedTo,
+      excludeId,
+      excludeSlug,
+      publishedOnly: true,
+      useCache: true,
+    });
 
-    if (search) {
-      filters.push({
-        OR: [
-          { title: { contains: search, mode: "insensitive" } },
-          { content: { contains: search, mode: "insensitive" } },
-          { tags: { has: search.toLowerCase() } },
-        ],
-      });
-    }
-
-    if (tag) {
-      filters.push({ tags: { has: tag.toLowerCase() } });
-    }
-
-    if (excludeId) {
-      excludedIds.push(excludeId);
-    }
-
-    if (excludeSlug) {
-      const ref = await prisma.blog.findUnique({
-        where: { slug: excludeSlug },
-        select: { id: true },
-      });
-      if (ref) excludedIds.push(ref.id);
-    }
-
-    if (relatedTo) {
-      const reference = await prisma.blog.findUnique({
-        where: { slug: relatedTo },
-        select: { id: true, tags: true },
-      });
-
-      if (reference) {
-        const relatedTags = reference.tags?.length ? reference.tags : undefined;
-        excludedIds.push(reference.id);
-        if (relatedTags) {
-          filters.push({ tags: { hasSome: relatedTags } });
-        }
-      }
-    }
-
-    if (excludedIds.length) {
-      filters.push({ id: { notIn: excludedIds } });
-    }
-
-    // Public endpoint: only return published posts unless admin requests otherwise
-    filters.push({ published: true });
-
-    const where = filters.length ? { AND: filters } : undefined;
-
-    const skip = (page - 1) * limit;
-
-    const [items, count] = await Promise.all([
-      prisma.blog.findMany({
-        where,
-        orderBy: { createdAt: "desc" },
-        skip,
-        take: limit,
-      }),
-      prisma.blog.count({ where }),
-    ]);
-
-    return NextResponse.json({
-      data: items,
-      pagination: {
-        page,
-        limit,
-        total: count,
-        totalPages: Math.max(1, Math.ceil(count / limit)),
+    return NextResponse.json(result, {
+      headers: {
+        "Cache-Control": "public, s-maxage=60, stale-while-revalidate=300",
       },
     });
   } catch (error) {
@@ -117,6 +57,15 @@ export async function POST(request) {
 
     const finalSlug = await generateUniqueSlug(slug || title);
     const preparedTags = normalizeTags(tags);
+    const safeExcerpt =
+      excerpt?.trim() ||
+      (content
+        ? content
+            .replace(/<[^>]+>/g, " ")
+            .replace(/\s+/g, " ")
+            .trim()
+            .slice(0, 160) + "..."
+        : null);
 
     const blog = await prisma.blog.create({
       data: {
@@ -125,7 +74,7 @@ export async function POST(request) {
         coverImg: coverImg?.trim() || null,
         tags: preparedTags,
         slug: finalSlug,
-        excerpt: excerpt?.trim() || null,
+        excerpt: safeExcerpt,
         author: author?.trim() || null,
         metaTitle: metaTitle?.trim() || null,
         metaDescription: metaDescription?.trim() || null,
@@ -133,6 +82,8 @@ export async function POST(request) {
         published: published !== false,
       },
     });
+
+    invalidateBlogListingCache();
 
     const ip = await getClientIp(request);
     await recordAudit("blog.create", {

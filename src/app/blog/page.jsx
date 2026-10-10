@@ -1,18 +1,8 @@
 import Link from "next/link";
 import BlogCard from "@/components/BlogCard";
 import { getBaseUrl } from "@/lib/base-url";
+import { getBlogListing, getTopDiscoveredTags } from "@/lib/blogs";
 import "@/styles/blog.css";
-
-const fetchBlogs = async (searchParams) => {
-  const baseUrl = await getBaseUrl();
-  const queryString = new URLSearchParams(searchParams).toString();
-  const separator = queryString ? "?" : "";
-  const res = await fetch(`${baseUrl}/api/blog${separator}${queryString}`, {
-    next: { revalidate: 60 },
-  });
-  if (!res.ok) throw new Error("Failed to fetch blogs");
-  return res.json();
-};
 
 export const metadata = {
   title: "Generative AI & Prompt Engineering Blog | NIGAPE",
@@ -52,16 +42,23 @@ export default async function BlogPage({ searchParams }) {
 
   let data;
   try {
-    data = await fetchBlogs({ ...resolvedParams, page });
+    data = await getBlogListing({
+      page,
+      search: searchQuery,
+      tag: currentTag,
+      limit: 18,
+      useCache: true,
+    });
   } catch (error) {
-    console.error(error);
-    data = { data: [], pagination: { page: 1, totalPages: 1, limit: 0, total: 0 } };
+    console.error("Error fetching blog listing:", error);
+    data = { data: [], pagination: { page: 1, totalPages: 1, limit: 18, total: 0 } };
   }
 
   const blogs = data?.data || [];
   const hasFilters = Boolean(searchQuery || currentTag);
   const gridBlogs = blogs;
-  const discoveredTags = Array.from(new Set(blogs.flatMap((b) => b.tags || []))).slice(0, 10);
+  const totalArticles = data?.pagination?.total ?? blogs.length;
+  const discoveredTags = await getTopDiscoveredTags(10);
 
   return (
     <main className="min-h-screen bg-black text-white font-sans pt-24 pb-20 px-4 sm:px-6 lg:px-8">
@@ -85,7 +82,7 @@ export default async function BlogPage({ searchParams }) {
               <p className="text-white/60 max-w-xl leading-relaxed">
                 Discover Generative AI trends, prompt engineering techniques, AI tools, LLM prompting best practices, practical use cases, and career guidance from the NIGAPE team.
               </p>
-              <p className="text-white/40 text-sm mt-3">{data?.pagination?.total || 0} articles · Updated weekly</p>
+              <p className="text-white/40 text-sm mt-3">{totalArticles} articles · Updated weekly</p>
             </div>
           </div>
         </div>
@@ -159,13 +156,15 @@ export default async function BlogPage({ searchParams }) {
               {hasFilters ? "Search results" : "All Articles"}
             </h2>
             <div className="flex-1 h-px bg-white/10" />
-            <span className="text-white/30 text-sm">{gridBlogs.length} posts</span>
+            <span className="text-white/40 text-sm">
+              Showing {gridBlogs.length} of {totalArticles} {totalArticles === 1 ? "article" : "articles"}
+            </span>
           </div>
         )}
 
         {/* ── Grid ── */}
         {gridBlogs.length > 0 ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 mb-12">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 mb-12 min-h-[600px]">
             {gridBlogs.map((blog) => (
               <BlogCard key={blog.id} blog={blog} baseUrl={baseUrl} />
             ))}

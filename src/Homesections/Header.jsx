@@ -1,14 +1,32 @@
 'use client';
 
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
-import { useState } from 'react';
+import { usePathname, useRouter } from 'next/navigation';
+import { useState, useCallback } from 'react';
 import CountrySelector from '@/components/CountrySelector';
 
 export default function Header() {
   const pathname = usePathname();
+  const router = useRouter();
   const normalizedPath = (pathname || "").toLowerCase();
   const [menuOpen, setMenuOpen] = useState(false);
+
+  const prefetchBlog = useCallback(() => {
+    try {
+      router.prefetch('/blog');
+      if (typeof window !== 'undefined' && !window.__blogPrefetched) {
+        window.__blogPrefetched = true;
+        fetch('/api/blog?page=1&limit=18', { priority: 'low' }).catch(() => {});
+      }
+    } catch {
+      // ignore
+    }
+  }, [router]);
+
+  const handleNavClick = useCallback(() => {
+    window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+    setMenuOpen(false);
+  }, []);
 
   const baseBtn =
     "text-white font-medium px-3 py-2 rounded-full transition-all duration-200 shadow-md text-base whitespace-nowrap";
@@ -47,6 +65,8 @@ export default function Header() {
         <div className="flex items-center justify-between w-full">
           <Link
             href="/"
+            scroll={true}
+            onClick={handleNavClick}
             className={`${baseBtn} ${pathname === '/' ? activeBtn : inactiveBtn}`}
           >
             Home
@@ -54,24 +74,35 @@ export default function Header() {
           <div className="flex items-center gap-2.5 md:gap-4">
             <Link
               href="/about-us"
+              scroll={true}
+              onClick={handleNavClick}
               className={`${baseBtn} ${normalizedPath === '/about-us' ? activeBtn : inactiveBtn}`}
             >
               About
             </Link>
             <Link
               href="/courses"
+              scroll={true}
+              onClick={handleNavClick}
               className={`${baseBtn} ${normalizedPath === '/courses' ? activeBtn : inactiveBtn}`}
             >
               Courses
             </Link>
             <Link
               href="/blog"
+              scroll={true}
+              prefetch={true}
+              onMouseEnter={prefetchBlog}
+              onTouchStart={prefetchBlog}
+              onClick={handleNavClick}
               className={`${baseBtn} ${normalizedPath.startsWith('/blog') ? activeBtn : inactiveBtn}`}
             >
               Blogs
             </Link>
             <Link
               href="/contact-us"
+              scroll={true}
+              onClick={handleNavClick}
               className={`${baseBtn} ${normalizedPath === '/contact-us' ? activeBtn : inactiveBtn}`}
             >
               Contact
@@ -119,7 +150,11 @@ export default function Header() {
             <Link
               key={link.href}
               href={link.href}
-              onClick={() => setMenuOpen(false)}
+              scroll={true}
+              prefetch={link.href === '/blog'}
+              onMouseEnter={link.href === '/blog' ? prefetchBlog : undefined}
+              onTouchStart={link.href === '/blog' ? prefetchBlog : undefined}
+              onClick={handleNavClick}
               className={`w-full text-white font-medium px-4 py-3 rounded-xl transition-all duration-200 text-sm
                 ${normalizedPath === link.href.toLowerCase()
                   ? "bg-[#FF40EB] text-white"

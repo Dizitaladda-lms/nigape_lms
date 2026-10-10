@@ -7,6 +7,7 @@ import Footer from "../Homesections/Footer.jsx";
 import ClientWrapper from "./wraper.jsx";
 import EnrollmentPopupGate from "@/components/EnrollmentPopupGate";
 import FloatingContactButtons from "@/components/FloatingContactButtons";
+import ScrollToTop from "@/components/ScrollToTop";
 
 const geist = Geist({
   subsets: ["latin"],
@@ -106,6 +107,9 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
         </noscript>
         {/* End Google Tag Manager (noscript) */}
         <ClientWrapper>
+          <Suspense fallback={null}>
+            <ScrollToTop />
+          </Suspense>
           <Header />
           {children}
           <Suspense fallback={null}>
