@@ -6,11 +6,27 @@ export default function BlogError({ error, reset }) {
       <div>
         <h1>Blogs could not be loaded</h1>
         <p>
-          Check that this deployment uses the correct database and that its Prisma
-          migrations have been applied.
+          This deployment cannot read blog data from its configured database. For
+          a subdomain deployment, check these settings in that deployment&apos;s
+          environment:
         </p>
-        <p className="blog-error__details">{error.message}</p>
-        <button type="button" onClick={reset}>Try again</button>
+        <ol>
+          <li>
+            Confirm <code>DATABASE_URL</code> points to the database that contains
+            your blog posts.
+          </li>
+          <li>
+            Apply the included Prisma migration using <code>npm run db:migrate</code>
+            against that same database.
+          </li>
+          <li>Redeploy the subdomain after the migration completes.</li>
+        </ol>
+        <div className="blog-error__actions">
+          <button type="button" onClick={reset}>Try again</button>
+          {error.digest ? (
+            <small>Diagnostic reference: {error.digest}</small>
+          ) : null}
+        </div>
       </div>
       <style jsx>{`
         .blog-error {
@@ -31,9 +47,16 @@ export default function BlogError({ error, reset }) {
         }
         .blog-error h1 { margin: 0 0 0.75rem; font-size: 1.5rem; font-weight: 800; }
         .blog-error p { color: #617493; line-height: 1.6; }
-        .blog-error__details { overflow-wrap: anywhere; font-size: 0.85rem; }
+        .blog-error ol { padding-left: 1.25rem; color: #617493; line-height: 1.8; }
+        .blog-error code {
+          padding: 0.12rem 0.35rem;
+          border-radius: 0.35rem;
+          color: #0757d5;
+          background: #eff6ff;
+          font-size: 0.9em;
+        }
+        .blog-error__actions { display: flex; flex-wrap: wrap; align-items: center; gap: 1rem; }
         .blog-error button {
-          margin-top: 0.75rem;
           padding: 0.65rem 1rem;
           border: 0;
           border-radius: 0.75rem;
@@ -42,6 +65,7 @@ export default function BlogError({ error, reset }) {
           font-weight: 700;
           cursor: pointer;
         }
+        .blog-error small { color: #617493; overflow-wrap: anywhere; }
       `}</style>
     </main>
   );
