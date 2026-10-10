@@ -3,9 +3,10 @@
 
 import { useState, useEffect } from 'react';
 
-export default function NeoLeafLoader() {
+export default function NeoLeafLoader({ onComplete }) {
   const [progress, setProgress] = useState(0);
   const [isComplete, setIsComplete] = useState(false);
+  const [isFading, setIsFading] = useState(false);
   const [showTagline, setShowTagline] = useState(false);
   const [typedText, setTypedText] = useState('');
   const fullText = 'NIGAPE';
@@ -70,8 +71,26 @@ export default function NeoLeafLoader() {
     }
   }, [isComplete, tagline, typedText]);
 
+  // Smooth exit transition once complete
+  useEffect(() => {
+    if (isComplete) {
+      const fadeTimer = setTimeout(() => {
+        setIsFading(true);
+      }, 500);
+
+      const exitTimer = setTimeout(() => {
+        if (onComplete) onComplete();
+      }, 950);
+
+      return () => {
+        clearTimeout(fadeTimer);
+        clearTimeout(exitTimer);
+      };
+    }
+  }, [isComplete, onComplete]);
+
   return (
-    <div className="fixed inset-0 bg-black flex items-center justify-center z-50 overflow-hidden">
+    <div className={`fixed inset-0 bg-black flex items-center justify-center z-[9999] overflow-hidden transition-opacity duration-500 ease-out ${isFading ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}>
       {/* Subtle background glow in #FF40EB */}
       <div className="absolute inset-0">
         <div 
