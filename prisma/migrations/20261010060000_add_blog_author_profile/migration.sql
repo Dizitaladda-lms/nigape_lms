@@ -1,0 +1,3 @@
+ALTER TABLE "Blog"
+ADD COLUMN IF NOT EXISTS "authorImage" TEXT,
+ADD COLUMN IF NOT EXISTS "authorDescription" TEXT;
