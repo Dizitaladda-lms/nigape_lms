@@ -1,68 +1,58 @@
 const { PrismaClient } = require("@prisma/client");
+const fs = require("fs");
+const path = require("path");
 
 const prisma = new PrismaClient();
 
-const slugify = (value = "") =>
-  value
-    .toString()
-    .normalize("NFKD")
-    .replace(/\p{Diacritic}/gu, "")
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/(^-|-$)+/g, "") || "post";
-
-const demoContent = (heading, body) => `
-  <h2>${heading}</h2>
-  <p>${body}</p>
-  <p>This starter template stores HTML output from TipTap so you can easily render it without extra parsing steps.</p>
-`;
-
-const seedBlogs = [
-  {
-    title: "Launching a Multi-tenant Content Engine",
-    tags: ["Next.js", "Architecture", "Prisma"],
-    coverImg: "/placeholder.svg",
-    content: demoContent(
-      "Scale without rebuilding",
-      "This kit focuses on a reusable setup so you can clone it many times and only swap brand-specific pieces like colors, typography, and hero sections."
-    ),
-  },
-  {
-    title: "Authoring Experience with TipTap",
-    tags: ["Editor", "TipTap", "Admin"],
-    coverImg: "/placeholder.svg",
-    content: demoContent(
-      "Rich text without plugins",
-      "TipTap provides a modern authoring experience with extensible toolbars, keyboard shortcuts, and clean HTML output ready for SEO-friendly rendering."
-    ),
-  },
-  {
-    title: "Improving SEO for Content-heavy Sites",
-    tags: ["SEO", "Content", "Performance"],
-    coverImg: "/placeholder.svg",
-    content: demoContent(
-      "Metadata and related posts",
-      "Each blog detail page ships with dynamic metadata, structured headings, and related content suggestions to keep readers engaged."
-    ),
-  },
-];
-
 async function main() {
-  for (const blog of seedBlogs) {
-    const slug = slugify(blog.title);
+  const jsonPath = path.join(__dirname, "blogs-data.json");
+  if (!fs.existsSync(jsonPath)) {
+    console.error("No prisma/blogs-data.json found to transfer.");
+    return;
+  }
 
+  const raw = fs.readFileSync(jsonPath, "utf-8");
+  const blogs = JSON.parse(raw);
+  console.log(`Starting transfer of ${blogs.length} blogs into database...`);
+
+  let transferred = 0;
+  for (const b of blogs) {
+    const slug = b.slug;
     await prisma.blog.upsert({
       where: { slug },
       update: {
-        ...blog,
-        slug,
+        title: b.title,
+        content: b.content,
+        excerpt: b.excerpt,
+        coverImg: b.coverImg,
+        tags: b.tags || [],
+        author: b.author || "Editorial Team",
+        metaTitle: b.metaTitle,
+        metaDescription: b.metaDescription,
+        schemaJsonLd: b.schemaJsonLd,
+        published: b.published !== false,
       },
       create: {
-        ...blog,
-        slug,
+        id: b.id,
+        title: b.title,
+        slug: b.slug,
+        content: b.content,
+        excerpt: b.excerpt,
+        coverImg: b.coverImg,
+        tags: b.tags || [],
+        author: b.author || "Editorial Team",
+        metaTitle: b.metaTitle,
+        metaDescription: b.metaDescription,
+        schemaJsonLd: b.schemaJsonLd,
+        published: b.published !== false,
+        createdAt: b.createdAt ? new Date(b.createdAt) : new Date(),
+        updatedAt: b.updatedAt ? new Date(b.updatedAt) : new Date(),
       },
     });
+    transferred++;
   }
+
+  console.log(`✅ Successfully transferred all ${transferred} blogs into the database!`);
 }
 
 main()
@@ -70,7 +60,7 @@ main()
     await prisma.$disconnect();
   })
   .catch(async (error) => {
-    console.error("Seeding failed", error);
+    console.error("Transfer failed:", error);
     await prisma.$disconnect();
     process.exit(1);
   });
