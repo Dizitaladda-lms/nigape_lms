@@ -26,9 +26,10 @@ const BlogCard = ({ blog, baseUrl }) => {
   const hasCover = Boolean(rawCover);
   const cover = hasCover ? rawCover : null;
   const tags = blog.tags?.slice(0, 3) || [];
+  const excerpt = toExcerpt(blog.excerpt || blog.content);
 
   return (
-    <article className="group relative flex flex-col rounded-2xl overflow-hidden border border-[#9234eb]/25 bg-gradient-to-br from-[#0d0d1a] to-[#120820] hover:border-[#9234eb]/60 hover:shadow-xl hover:shadow-[#9234eb]/10 transition-all duration-300 h-full">
+    <article className="blog-card group relative flex flex-col rounded-2xl overflow-hidden border border-[#9234eb]/25 bg-gradient-to-br from-[#0d0d1a] to-[#120820] hover:border-[#9234eb]/60 hover:shadow-xl hover:shadow-[#9234eb]/10 transition-all duration-300 h-full">
       {/* Cover image */}
       <Link
         href={`/blog/${blog.slug}`}
@@ -74,7 +75,7 @@ const BlogCard = ({ blog, baseUrl }) => {
         </h3>
 
         {/* Excerpt */}
-        <p className="text-white/50 text-sm leading-relaxed line-clamp-3 flex-1">{toExcerpt(blog.content)}</p>
+        <p className="text-white/50 text-sm leading-relaxed line-clamp-3 flex-1">{excerpt}</p>
 
         {/* Tags */}
         {tags.length > 0 && (
@@ -104,4 +105,3 @@ const BlogCard = ({ blog, baseUrl }) => {
 };
 
 export default BlogCard;
-

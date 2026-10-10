@@ -1,6 +1,7 @@
 // app/layout.js
 import { Suspense } from "react";
 import { Geist, Geist_Mono } from "next/font/google";
+import Script from "next/script";
 import "./globals.css";
 import Header from "../Homesections/Header.jsx";
 import Footer from "../Homesections/Footer.jsx";
@@ -62,8 +63,12 @@ export default function RootLayout({ children }) {
     <html lang="en">
       <head>
         <meta name="Publisher" content="Team NIGAPE" />
-        {/* Google Tag Manager */}
-        <script
+      </head>
+
+      <body className={`${geist.variable} ${geistMono.variable} antialiased`}>
+        <Script
+          id="gtm-tstxs6l6"
+          strategy="lazyOnload"
           dangerouslySetInnerHTML={{
             __html: `(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
 new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
@@ -72,8 +77,9 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 })(window,document,'script','dataLayer','GTM-TSTXS6L6');`,
           }}
         />
-        {/* Google Tag Manager (GTM-WSRRRM2L) */}
-        <script
+        <Script
+          id="gtm-wsrrrm2l"
+          strategy="lazyOnload"
           dangerouslySetInnerHTML={{
             __html: `(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
 new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
@@ -82,10 +88,6 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 })(window,document,'script','dataLayer','GTM-WSRRRM2L');`,
           }}
         />
-        {/* End Google Tag Manager */}
-      </head>
-
-      <body className={`${geist.variable} ${geistMono.variable} antialiased`}>
         {/* Google Tag Manager (noscript) */}
         <noscript>
           <iframe

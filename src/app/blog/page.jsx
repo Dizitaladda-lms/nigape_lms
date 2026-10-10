@@ -1,18 +1,9 @@
 import Link from "next/link";
 import BlogCard from "@/components/BlogCard";
 import { getBaseUrl } from "@/lib/base-url";
+import { getBlogListing } from "@/lib/blogs";
+import BlogShell from "@/components/BlogShell";
 import "@/styles/blog.css";
-
-const fetchBlogs = async (searchParams) => {
-  const baseUrl = await getBaseUrl();
-  const queryString = new URLSearchParams(searchParams).toString();
-  const separator = queryString ? "?" : "";
-  const res = await fetch(`${baseUrl}/api/blog${separator}${queryString}`, {
-    next: { revalidate: 60 },
-  });
-  if (!res.ok) throw new Error("Failed to fetch blogs");
-  return res.json();
-};
 
 export const metadata = {
   title: "Generative AI & Prompt Engineering Blog | NIGAPE",
@@ -52,7 +43,7 @@ export default async function BlogPage({ searchParams }) {
 
   let data;
   try {
-    data = await fetchBlogs({ ...resolvedParams, page });
+    data = await getBlogListing(new URLSearchParams({ ...resolvedParams, page: String(page) }));
   } catch (error) {
     console.error(error);
     data = { data: [], pagination: { page: 1, totalPages: 1, limit: 0, total: 0 } };
@@ -64,11 +55,12 @@ export default async function BlogPage({ searchParams }) {
   const discoveredTags = Array.from(new Set(blogs.flatMap((b) => b.tags || []))).slice(0, 10);
 
   return (
-    <main className="min-h-screen bg-black text-white font-sans pt-24 pb-20 px-4 sm:px-6 lg:px-8">
+    <BlogShell>
+    <main className="blog-listing min-h-screen font-sans pt-24 pb-20 px-4 sm:px-6 lg:px-8">
       <div className="max-w-6xl mx-auto">
 
         {/* ── Hero ── */}
-        <div className="relative rounded-3xl overflow-hidden border border-[#9234eb]/30 bg-gradient-to-br from-[#0d0d1a] to-[#120820] p-8 sm:p-12 mb-10 shadow-2xl">
+        <div className="blog-listing__hero relative rounded-3xl overflow-hidden border border-[#9234eb]/30 bg-gradient-to-br from-[#0d0d1a] to-[#120820] p-8 sm:p-12 mb-10 shadow-2xl">
           {/* glow blobs */}
           <div className="pointer-events-none absolute -top-24 -left-24 w-72 h-72 rounded-full bg-[#9234eb]/20 blur-3xl" />
           <div className="pointer-events-none absolute -bottom-16 -right-16 w-56 h-56 rounded-full bg-[#FF40EB]/15 blur-3xl" />
@@ -223,6 +215,6 @@ export default async function BlogPage({ searchParams }) {
         )}
       </div>
     </main>
+    </BlogShell>
   );
 }
-

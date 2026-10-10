@@ -5,96 +5,12 @@ import { normalizeTags } from "@/lib/tags";
 import { ensureAdminApi } from "@/lib/auth";
 import { recordAudit } from "@/lib/audit";
 import { getClientIp } from "@/lib/request-info";
-
-const DEFAULT_LIMIT = 18;
-const MAX_LIMIT = 50;
+import { getBlogListing } from "@/lib/blogs";
 
 export async function GET(request) {
   try {
     const { searchParams } = new URL(request.url);
-    const page = Number(searchParams.get("page")) || 1;
-    const limitParam = Number(searchParams.get("limit")) || DEFAULT_LIMIT;
-    const limit = Math.min(Math.max(limitParam, 1), MAX_LIMIT);
-    const search = searchParams.get("search")?.trim();
-    const tag = searchParams.get("tag")?.trim();
-    const relatedTo = searchParams.get("relatedTo")?.trim();
-    const excludeId = searchParams.get("excludeId")?.trim();
-    const excludeSlug = searchParams.get("excludeSlug")?.trim();
-
-    const filters = [];
-    const excludedIds = [];
-
-    if (search) {
-      filters.push({
-        OR: [
-          { title: { contains: search, mode: "insensitive" } },
-          { content: { contains: search, mode: "insensitive" } },
-          { tags: { has: search.toLowerCase() } },
-        ],
-      });
-    }
-
-    if (tag) {
-      filters.push({ tags: { has: tag.toLowerCase() } });
-    }
-
-    if (excludeId) {
-      excludedIds.push(excludeId);
-    }
-
-    if (excludeSlug) {
-      const ref = await prisma.blog.findUnique({
-        where: { slug: excludeSlug },
-        select: { id: true },
-      });
-      if (ref) excludedIds.push(ref.id);
-    }
-
-    if (relatedTo) {
-      const reference = await prisma.blog.findUnique({
-        where: { slug: relatedTo },
-        select: { id: true, tags: true },
-      });
-
-      if (reference) {
-        const relatedTags = reference.tags?.length ? reference.tags : undefined;
-        excludedIds.push(reference.id);
-        if (relatedTags) {
-          filters.push({ tags: { hasSome: relatedTags } });
-        }
-      }
-    }
-
-    if (excludedIds.length) {
-      filters.push({ id: { notIn: excludedIds } });
-    }
-
-    // Public endpoint: only return published posts unless admin requests otherwise
-    filters.push({ published: true });
-
-    const where = filters.length ? { AND: filters } : undefined;
-
-    const skip = (page - 1) * limit;
-
-    const [items, count] = await Promise.all([
-      prisma.blog.findMany({
-        where,
-        orderBy: { createdAt: "desc" },
-        skip,
-        take: limit,
-      }),
-      prisma.blog.count({ where }),
-    ]);
-
-    return NextResponse.json({
-      data: items,
-      pagination: {
-        page,
-        limit,
-        total: count,
-        totalPages: Math.max(1, Math.ceil(count / limit)),
-      },
-    });
+    return NextResponse.json(await getBlogListing(searchParams));
   } catch (error) {
     console.error("GET /api/blog failed", error);
     return NextResponse.json({ error: "Unable to fetch blogs" }, { status: 500 });

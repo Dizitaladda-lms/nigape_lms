@@ -2,7 +2,9 @@ import Link from "next/link";
 import Image from "next/image";
 import { notFound } from "next/navigation";
 import { getBaseUrl } from "@/lib/base-url";
-import BlogCard from "@/components/BlogCard";
+import { getBlogBySlug, getBlogSidebarData } from "@/lib/blogs";
+import BlogShell from "@/components/BlogShell";
+import BlogSidebar from "@/components/BlogSidebar";
 import "@/styles/blog.css";
 
 const formatDate = (value) =>
@@ -29,48 +31,10 @@ const parseJsonLd = (value) => {
   }
 };
 
-const fetchBlog = async (slug) => {
-  const baseUrl = await getBaseUrl();
-  const res = await fetch(`${baseUrl}/api/blog/${slug}`, {
-    next: { revalidate: 60 },
-  });
-
-  if (res.status === 404) {
-    return null;
-  }
-
-  if (!res.ok) {
-    throw new Error("Failed to fetch blog");
-  }
-
-  return res.json();
-};
-
-const fetchRelated = async (slug, baseUrl) => {
-  // Try tag-based related posts first
-  const res = await fetch(`${baseUrl}/api/blog?relatedTo=${slug}&limit=3`, {
-    next: { revalidate: 60 },
-  });
-  if (!res.ok) return { data: [] };
-  const result = await res.json();
-
-  // If no tag-matched posts, fall back to latest posts (excluding current)
-  if (!result.data?.length) {
-    const fallback = await fetch(
-      `${baseUrl}/api/blog?excludeSlug=${slug}&limit=3`,
-      { next: { revalidate: 60 } }
-    );
-    if (!fallback.ok) return { data: [] };
-    return fallback.json();
-  }
-
-  return result;
-};
-
 export async function generateMetadata(props) {
   const params = await props?.params;
   const slug = params?.slug;
-  const blog = slug ? await fetchBlog(slug) : null;
+  const blog = slug ? await getBlogBySlug(slug) : null;
 
   if (!blog) {
     return {
@@ -105,14 +69,13 @@ export async function generateMetadata(props) {
 export default async function BlogDetails(props) {
   const params = await props?.params;
   const slug = params?.slug;
-  const blog = slug ? await fetchBlog(slug) : null;
+  const blog = slug ? await getBlogBySlug(slug) : null;
 
   if (!blog) {
     notFound();
   }
 
-  const baseUrl = await getBaseUrl();
-  const related = await fetchRelated(slug, baseUrl);
+  const { latestPosts, categories } = await getBlogSidebarData();
   const cover = blog.coverImg?.trim();
   const content = normalizeBlogHeadings(blog.content);
   const isExternalCover = Boolean(cover && /^(https?:)?\/\//i.test(cover));
@@ -125,82 +88,81 @@ export default async function BlogDetails(props) {
   const customJsonLd = parseJsonLd(blog.schemaJsonLd);
 
   return (
-    <main id="main-content" className="blog-detail" role="main">
-      {customJsonLd ? (
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(customJsonLd) }}
-        />
-      ) : null}
-      <article aria-labelledby="blog-title">
-        <header className="blog-detail__header">
-          <nav className="blog-breadcrumb" aria-label="Breadcrumb">
-            <Link href="/blog">Blog</Link>
-            <span aria-hidden="true">/</span>
-            <span>{blog.title}</span>
-          </nav>
+    <BlogShell>
+      <main id="main-content" className="blog-detail" role="main">
+        <div className="blog-detail__layout">
+          <article aria-labelledby="blog-title">
+            {customJsonLd ? (
+              <script
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{ __html: JSON.stringify(customJsonLd) }}
+              />
+            ) : null}
+            <header className="blog-detail__header">
+              <nav className="blog-breadcrumb" aria-label="Breadcrumb">
+                <Link href="/blog">Blog</Link>
+                <span aria-hidden="true">/</span>
+                <span>{blog.title}</span>
+              </nav>
 
-          <p className="eyebrow">{publishedDate}</p>
-          <h1 id="blog-title">{blog.title}</h1>
+              <p className="eyebrow">{publishedDate}</p>
+              <h1 id="blog-title">{blog.title}</h1>
 
-          <div className="blog-detail__meta" aria-label="Post details">
-            <span>{readingMinutes} min read</span>
-            <span>Updated {updatedDate}</span>
-            <span>By Editorial Team</span>
-          </div>
+              <div className="blog-detail__meta" aria-label="Post details">
+                <span>{readingMinutes} min read</span>
+                <span>Updated {updatedDate}</span>
+                <span>By Editorial Team</span>
+              </div>
 
-          {blog.tags?.length ? (
-            <div className="tags" aria-label="Post tags">
-              {blog.tags.map((tag) => (
-                <Link key={tag} href={`/blog?tag=${encodeURIComponent(tag)}`}>
-                  #{tag}
-                </Link>
-              ))}
+              {blog.tags?.length ? (
+                <div className="tags" aria-label="Post tags">
+                  {blog.tags.map((tag) => (
+                    <Link key={tag} href={`/blog?tag=${encodeURIComponent(tag)}`}>
+                      #{tag}
+                    </Link>
+                  ))}
+                </div>
+              ) : null}
+            </header>
+
+            <div className={`cover${isPlaceholder ? " cover--placeholder" : ""}`}>
+              <Image
+                src={imageSrc}
+                alt={blog.title}
+                fill
+                sizes="(max-width: 900px) 100vw, 840px"
+                priority
+                style={{ objectFit: "cover" }}
+                unoptimized={isExternalCover}
+              />
+              {isPlaceholder ? (
+                <span className="cover__hint">
+                  Upload a cover image from the admin panel to replace this default artwork.
+                </span>
+              ) : null}
             </div>
-          ) : null}
-        </header>
 
-        <div className={`cover${isPlaceholder ? " cover--placeholder" : ""}`}>
-          <Image
-            src={imageSrc}
-            alt={blog.title}
-            fill
-            sizes="(max-width: 900px) 100vw, 840px"
-            priority
-            style={{ objectFit: "cover" }}
-            unoptimized={isExternalCover}
+            <div className="content" dangerouslySetInnerHTML={{ __html: content }} />
+
+            <section className="blog-detail__footer-cta" aria-label="Continue reading">
+              <p>Want more insights like this?</p>
+              <div>
+                <Link href="/blog" className="btn btn--ghost">
+                  Browse all posts
+                </Link>
+                <Link href="/contact-us" className="btn btn--primary">
+                  Contact team
+                </Link>
+              </div>
+            </section>
+          </article>
+          <BlogSidebar
+            latestPosts={latestPosts}
+            categories={categories}
+            tags={blog.tags || []}
           />
-          {isPlaceholder ? <span className="cover__hint">Upload a cover image from the admin panel to replace this default artwork.</span> : null}
         </div>
-
-        <div className="content" dangerouslySetInnerHTML={{ __html: content }} />
-
-        <section className="blog-detail__footer-cta" aria-label="Continue reading">
-          <p>Want more insights like this?</p>
-          <div>
-            <Link href="/blog" className="btn btn--ghost">
-              Browse all posts
-            </Link>
-            <Link href="/contact-us" className="btn btn--primary">
-              Contact team
-            </Link>
-          </div>
-        </section>
-      </article>
-
-      {related?.data?.length ? (
-        <aside className="related-cards" aria-label="Recommended posts">
-          <div className="related-cards__header">
-            <h3>Recommended Reading</h3>
-            <Link href="/blog" className="related-cards__all">All articles →</Link>
-          </div>
-          <div className="related-cards__grid">
-            {related.data.map((item) => (
-              <BlogCard key={item.id} blog={item} baseUrl={baseUrl} />
-            ))}
-          </div>
-        </aside>
-      ) : null}
-    </main>
+      </main>
+    </BlogShell>
   );
 }
