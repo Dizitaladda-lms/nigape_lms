@@ -1,5 +1,10 @@
+"use client";
+
+import { usePathname } from "next/navigation";
 import NeoLeafLoader from "@/app/Loader";
 
 export default function Loading() {
-  return <NeoLeafLoader />;
+  const pathname = usePathname();
+
+  return pathname === "/" ? <NeoLeafLoader /> : null;
 }
