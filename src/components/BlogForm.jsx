@@ -13,6 +13,8 @@ const baseState = {
   content: "",
   excerpt: "",
   author: "",
+  authorImage: "",
+  authorDescription: "",
   metaTitle: "",
   metaDescription: "",
   published: true,
@@ -62,6 +64,8 @@ const BlogForm = ({ initialData = null, mode = "create" }) => {
     content: initialData?.content || "",
     excerpt: initialData?.excerpt || "",
     author: initialData?.author || "",
+    authorImage: initialData?.authorImage || "",
+    authorDescription: initialData?.authorDescription || "",
     metaTitle: initialData?.metaTitle || "",
     metaDescription: initialData?.metaDescription || "",
     published: initialData?.published !== false,
@@ -106,7 +110,7 @@ const BlogForm = ({ initialData = null, mode = "create" }) => {
     setFormValues((prev) => ({ ...prev, [field]: value }));
   };
 
-  const handleFileChange = async (event) => {
+  const handleFileChange = async (event, field = "coverImg") => {
     const file = event.target.files?.[0];
     if (!file) return;
 
@@ -130,7 +134,7 @@ const BlogForm = ({ initialData = null, mode = "create" }) => {
       if (!response.ok) {
         throw new Error(result.error || "Upload failed");
       }
-      setField("coverImg", result.url);
+      setField(field, result.url);
       setStatus({ type: "success", message: "Image uploaded" });
     } catch (error) {
       setStatus({ type: "error", message: error.message });
@@ -157,6 +161,8 @@ const BlogForm = ({ initialData = null, mode = "create" }) => {
         content: formValues.content,
         excerpt: formValues.excerpt?.trim() || "",
         author: formValues.author?.trim() || "",
+        authorImage: formValues.authorImage?.trim() || "",
+        authorDescription: formValues.authorDescription?.trim() || "",
         metaTitle: formValues.metaTitle?.trim() || "",
         metaDescription: formValues.metaDescription?.trim() || "",
         schemaJsonLd: schemaOverride?.trim() || "",
@@ -359,6 +365,49 @@ const BlogForm = ({ initialData = null, mode = "create" }) => {
                 value={formValues.author}
                 onChange={(event) => setField("author", event.target.value)}
               />
+            </label>
+
+            <div className="field">
+              <span>Author Profile Picture</span>
+              <div style={{ display: "flex", gap: "8px", flexDirection: "column" }}>
+                <input
+                  type="file"
+                  accept="image/png,image/jpeg,image/webp"
+                  onChange={(event) => handleFileChange(event, "authorImage")}
+                  disabled={uploading}
+                />
+                <input
+                  type="text"
+                  name="authorImage"
+                  placeholder="Or paste image URL (https://...)"
+                  value={formValues.authorImage}
+                  onChange={(event) => setField("authorImage", event.target.value)}
+                />
+              </div>
+              {formValues.authorImage?.trim() ? (
+                <div style={{ marginTop: "8px", display: "flex", alignItems: "center", gap: "10px" }}>
+                  <img
+                    src={formValues.authorImage}
+                    alt="Author preview"
+                    style={{ width: "48px", height: "48px", borderRadius: "50%", objectFit: "cover", border: "1px solid #e0e0e0" }}
+                  />
+                  <small style={{ color: "#888" }}>Author preview</small>
+                </div>
+              ) : null}
+            </div>
+
+            <label className="field">
+              <span>Author Description / Bio</span>
+              <textarea
+                name="authorDescription"
+                rows={4}
+                maxLength={1200}
+                placeholder="Short bio, expertise, or quick facts about the author..."
+                value={formValues.authorDescription}
+                onChange={(event) => setField("authorDescription", event.target.value)}
+                style={{ resize: "vertical", width: "100%" }}
+              />
+              <small>{formValues.authorDescription.length}/1200</small>
             </label>
           </div>
 

@@ -49,7 +49,7 @@ export async function POST(request) {
     }
 
     const payload = await request.json();
-    const { title, content, coverImg, tags, slug, excerpt, author, metaTitle, metaDescription, schemaJsonLd, published } = payload;
+    const { title, content, coverImg, tags, slug, excerpt, author, authorImage, authorDescription, metaTitle, metaDescription, schemaJsonLd, published } = payload;
 
     if (!title?.trim() || !content?.trim()) {
       return NextResponse.json({ error: "Title and content are required" }, { status: 400 });
@@ -76,6 +76,8 @@ export async function POST(request) {
         slug: finalSlug,
         excerpt: safeExcerpt,
         author: author?.trim() || null,
+        authorImage: authorImage?.trim() || null,
+        authorDescription: authorDescription?.trim() || null,
         metaTitle: metaTitle?.trim() || null,
         metaDescription: metaDescription?.trim() || null,
         schemaJsonLd: schemaJsonLd?.trim() || null,

@@ -171,3 +171,53 @@ export async function getTopDiscoveredTags(limit = 10) {
     return [];
   }
 }
+
+export async function getBlogBySlug(slug) {
+  try {
+    return await prisma.blog.findUnique({
+      where: { slug },
+    });
+  } catch (error) {
+    console.error("Error fetching blog by slug:", error);
+    return null;
+  }
+}
+
+export async function getBlogSidebarData() {
+  try {
+    const [latestPosts, publishedPosts] = await Promise.all([
+      prisma.blog.findMany({
+        where: { published: true },
+        orderBy: { createdAt: "desc" },
+        take: 4,
+        select: {
+          id: true,
+          slug: true,
+          title: true,
+          coverImg: true,
+          tags: true,
+          createdAt: true,
+        },
+      }),
+      prisma.blog.findMany({
+        where: { published: true },
+        select: { tags: true },
+      }),
+    ]);
+
+    const categories = Array.from(
+      new Set(publishedPosts.flatMap((post) => post.tags || []))
+    ).slice(0, 12);
+
+    return {
+      latestPosts,
+      categories,
+    };
+  } catch (error) {
+    console.error("Error in getBlogSidebarData:", error);
+    return {
+      latestPosts: [],
+      categories: [],
+    };
+  }
+}

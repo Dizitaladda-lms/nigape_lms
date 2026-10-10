@@ -21,8 +21,10 @@ model Blog {
   excerpt         String?
   coverImg        String?
   tags            String[]
-  author          String?
-  metaTitle       String?
+  author            String?
+  authorImage       String?
+  authorDescription String?
+  metaTitle         String?
   metaDescription String?
   schemaJsonLd    String?
   published       Boolean  @default(true)
