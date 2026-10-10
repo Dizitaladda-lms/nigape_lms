@@ -41,13 +41,9 @@ export default async function BlogPage({ searchParams }) {
   const currentTag = resolvedParams.tag || "";
   const baseUrl = await getBaseUrl();
 
-  let data;
-  try {
-    data = await getBlogListing(new URLSearchParams({ ...resolvedParams, page: String(page) }));
-  } catch (error) {
-    console.error(error);
-    data = { data: [], pagination: { page: 1, totalPages: 1, limit: 0, total: 0 } };
-  }
+  const data = await getBlogListing(
+    new URLSearchParams({ ...resolvedParams, page: String(page) })
+  );
 
   const blogs = data?.data || [];
   const hasFilters = Boolean(searchQuery || currentTag);
