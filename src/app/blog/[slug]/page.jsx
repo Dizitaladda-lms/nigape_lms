@@ -86,6 +86,11 @@ export default async function BlogDetails(props) {
   const publishedDate = formatDate(blog.createdAt);
   const updatedDate = formatDate(blog.updatedAt ?? blog.createdAt);
   const customJsonLd = parseJsonLd(blog.schemaJsonLd);
+  const authorName = blog.author?.trim() || "Editorial Team";
+  const showAuthorBox = Boolean(blog.author || blog.authorImage || blog.authorDescription);
+  const authorImageIsExternal = Boolean(
+    blog.authorImage && /^(https?:)?\/\//i.test(blog.authorImage)
+  );
 
   return (
     <BlogShell>
@@ -111,7 +116,7 @@ export default async function BlogDetails(props) {
               <div className="blog-detail__meta" aria-label="Post details">
                 <span>{readingMinutes} min read</span>
                 <span>Updated {updatedDate}</span>
-                <span>By Editorial Team</span>
+                <span>By {authorName}</span>
               </div>
 
               {blog.tags?.length ? (
@@ -143,6 +148,35 @@ export default async function BlogDetails(props) {
             </div>
 
             <div className="content" dangerouslySetInnerHTML={{ __html: content }} />
+
+            {showAuthorBox ? (
+              <section className="blog-author" aria-labelledby="blog-author-title">
+                {blog.authorImage ? (
+                  <Image
+                    className="blog-author__image"
+                    src={blog.authorImage}
+                    alt={authorName}
+                    width={112}
+                    height={112}
+                    sizes="112px"
+                    unoptimized={authorImageIsExternal}
+                  />
+                ) : (
+                  <div className="blog-author__placeholder" aria-hidden="true">
+                    {authorName.slice(0, 1).toUpperCase()}
+                  </div>
+                )}
+                <div className="blog-author__body">
+                  <h2 id="blog-author-title">About the Author</h2>
+                  <h3>{authorName}</h3>
+                  {blog.authorDescription ? (
+                    <p>{blog.authorDescription}</p>
+                  ) : (
+                    <p>Contributor to the NIGAPE blog.</p>
+                  )}
+                </div>
+              </section>
+            ) : null}
 
             <section className="blog-detail__footer-cta" aria-label="Continue reading">
               <p>Want more insights like this?</p>

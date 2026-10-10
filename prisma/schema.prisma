@@ -15,20 +15,22 @@ datasource db {
 }
 
 model Blog {
-  id              String   @id @default(cuid())
-  title           String
-  slug            String   @unique
-  content         String
-  excerpt         String?
-  coverImg        String?
-  tags            String[]
-  author          String?
-  metaTitle       String?
-  metaDescription String?
-  schemaJsonLd    String?
-  published       Boolean  @default(true)
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
+  id                String   @id @default(cuid())
+  title             String
+  slug              String   @unique
+  content           String
+  excerpt           String?
+  coverImg          String?
+  tags              String[]
+  author            String?
+  authorImage       String?
+  authorDescription String?
+  metaTitle         String?
+  metaDescription   String?
+  schemaJsonLd      String?
+  published         Boolean  @default(true)
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
 }
 
 model AdminAudit {
