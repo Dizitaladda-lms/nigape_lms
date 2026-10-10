@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Archive, CircleCheckBig, Clock3, FileText, PenSquare } from "lucide-react";
 import DeleteBlogButton from "@/components/DeleteBlogButton";
+import ExportBlogsButton from "@/components/ExportBlogsButton";
 import prisma from "@/lib/prisma";
 
 const fetchBlogs = async () =>
@@ -38,10 +39,13 @@ export default async function AdminBlogPage() {
           <h1>Dashboard</h1>
           <p>Overview of your blog</p>
         </div>
-        <Link href="/admin/blog/create" className="btn btn--primary admin-new-post-btn">
-          <PenSquare size={18} aria-hidden="true" />
-          <span>New Post</span>
-        </Link>
+        <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+          <ExportBlogsButton />
+          <Link href="/admin/blog/create" className="btn btn--primary admin-new-post-btn">
+            <PenSquare size={18} aria-hidden="true" />
+            <span>New Post</span>
+          </Link>
+        </div>
       </header>
 
       <div className="admin-kpi-grid" aria-label="Blog metrics">

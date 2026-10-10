@@ -1,33 +1,30 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { usePathname } from 'next/navigation';
 import '@/lib/dom-patch';
 import NeoLeafLoader from './Loader.jsx';
 
 export default function ClientWrapper({ children }) {
-  const [loading, setLoading] = useState(true);
-  const pathname = usePathname();
+  const [showLoader, setShowLoader] = useState(false);
 
   useEffect(() => {
-    // Only display the full loader on the main landing / homepage
-    if (pathname !== '/') {
-      setLoading(false);
-      return;
+    // Show loader only once when the user visits the site for the first time
+    try {
+      const alreadyLoaded = sessionStorage.getItem('nigape_has_loaded');
+      if (!alreadyLoaded) {
+        setShowLoader(true);
+        sessionStorage.setItem('nigape_has_loaded', 'true');
+      }
+    } catch {
+      // In case storage is inaccessible
+      setShowLoader(false);
     }
-
-    // Safety fallback so page is never blocked
-    const timer = setTimeout(() => {
-      setLoading(false);
-    }, 3500);
-
-    return () => clearTimeout(timer);
-  }, [pathname]);
+  }, []);
 
   return (
     <>
-      {loading && pathname === '/' && (
-        <NeoLeafLoader onComplete={() => setLoading(false)} />
+      {showLoader && (
+        <NeoLeafLoader onComplete={() => setShowLoader(false)} />
       )}
       {children}
     </>

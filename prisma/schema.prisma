@@ -23,8 +23,6 @@ model Blog {
   coverImg          String?
   tags              String[]
   author            String?
-  authorImage       String?
-  authorDescription String?
   metaTitle         String?
   metaDescription   String?
   schemaJsonLd      String?

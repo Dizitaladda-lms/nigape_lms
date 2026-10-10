@@ -87,10 +87,7 @@ export default async function BlogDetails(props) {
   const updatedDate = formatDate(blog.updatedAt ?? blog.createdAt);
   const customJsonLd = parseJsonLd(blog.schemaJsonLd);
   const authorName = blog.author?.trim() || "Editorial Team";
-  const showAuthorBox = Boolean(blog.author || blog.authorImage || blog.authorDescription);
-  const authorImageIsExternal = Boolean(
-    blog.authorImage && /^(https?:)?\/\//i.test(blog.authorImage)
-  );
+  const showAuthorBox = Boolean(blog.author);
 
   return (
     <BlogShell>
@@ -151,29 +148,13 @@ export default async function BlogDetails(props) {
 
             {showAuthorBox ? (
               <section className="blog-author" aria-labelledby="blog-author-title">
-                {blog.authorImage ? (
-                  <Image
-                    className="blog-author__image"
-                    src={blog.authorImage}
-                    alt={authorName}
-                    width={112}
-                    height={112}
-                    sizes="112px"
-                    unoptimized={authorImageIsExternal}
-                  />
-                ) : (
-                  <div className="blog-author__placeholder" aria-hidden="true">
-                    {authorName.slice(0, 1).toUpperCase()}
-                  </div>
-                )}
+                <div className="blog-author__placeholder" aria-hidden="true">
+                  {authorName.slice(0, 1).toUpperCase()}
+                </div>
                 <div className="blog-author__body">
                   <h2 id="blog-author-title">About the Author</h2>
                   <h3>{authorName}</h3>
-                  {blog.authorDescription ? (
-                    <p>{blog.authorDescription}</p>
-                  ) : (
-                    <p>Contributor to the NIGAPE blog.</p>
-                  )}
+                  <p>Contributor to the NIGAPE blog.</p>
                 </div>
               </section>
             ) : null}

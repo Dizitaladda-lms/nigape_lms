@@ -14,8 +14,6 @@ const baseState = {
   content: "",
   excerpt: "",
   author: "",
-  authorImage: "",
-  authorDescription: "",
   metaTitle: "",
   metaDescription: "",
   published: true,
@@ -65,8 +63,6 @@ const BlogForm = ({ initialData = null, mode = "create" }) => {
     content: initialData?.content || "",
     excerpt: initialData?.excerpt || "",
     author: initialData?.author || "",
-    authorImage: initialData?.authorImage || "",
-    authorDescription: initialData?.authorDescription || "",
     metaTitle: initialData?.metaTitle || "",
     metaDescription: initialData?.metaDescription || "",
     published: initialData?.published !== false,
@@ -162,8 +158,6 @@ const BlogForm = ({ initialData = null, mode = "create" }) => {
         content: formValues.content,
         excerpt: formValues.excerpt?.trim() || "",
         author: formValues.author?.trim() || "",
-        authorImage: formValues.authorImage?.trim() || "",
-        authorDescription: formValues.authorDescription?.trim() || "",
         metaTitle: formValues.metaTitle?.trim() || "",
         metaDescription: formValues.metaDescription?.trim() || "",
         schemaJsonLd: schemaOverride?.trim() || "",
@@ -384,62 +378,6 @@ const BlogForm = ({ initialData = null, mode = "create" }) => {
               </li>
             ))}
           </ul>
-        </section>
-
-        <section className="admin-card" aria-label="About the author">
-          <h3>About the Author</h3>
-          <div className="admin-cover-grid">
-            <div>
-              <label className="field field--file">
-                <span>Upload author image</span>
-                <input
-                  type="file"
-                  accept="image/png,image/jpeg,image/webp"
-                  onChange={(event) => handleImageUpload(event, "authorImage")}
-                  disabled={uploading}
-                />
-                <small>
-                  {uploading ? "Uploading..." : "JPEG, PNG, and WebP only."}
-                </small>
-              </label>
-              <label className="field">
-                <span>Or paste author image URL</span>
-                <input
-                  type="text"
-                  name="authorImage"
-                  placeholder="https://"
-                  value={formValues.authorImage}
-                  onChange={(event) => setField("authorImage", event.target.value)}
-                />
-              </label>
-            </div>
-            {formValues.authorImage?.trim() ? (
-              <div className="cover-preview">
-                <Image
-                  src={formValues.authorImage}
-                  alt="Author preview"
-                  width={480}
-                  height={270}
-                  unoptimized
-                  style={{ width: "100%", height: "auto", maxHeight: 225, objectFit: "cover" }}
-                />
-              </div>
-            ) : (
-              <p className="cover-preview--empty">No author image selected yet.</p>
-            )}
-          </div>
-          <label className="field">
-            <span>Author Description</span>
-            <textarea
-              name="authorDescription"
-              rows={5}
-              maxLength={1200}
-              placeholder="Write a short bio, expertise, experience, or quick facts about the author."
-              value={formValues.authorDescription}
-              onChange={(event) => setField("authorDescription", event.target.value)}
-            />
-            <small>{formValues.authorDescription.length}/1200</small>
-          </label>
         </section>
       </section>
 
