@@ -368,12 +368,12 @@ const BlogEditor = ({ value, onChange }) => {
 
   // Selection is now saved in the button's onMouseDown (before blur).
   // This callback is kept for any keyboard-triggered open in the future.
+  const [linkSelection, setLinkSelection] = useState(null);
+
   const handleLinkClick = useCallback(() => {
     if (!editor) return;
-    if (!savedSelectionRef.current) {
-      const { from, to } = editor.state.selection;
-      savedSelectionRef.current = { from, to };
-    }
+    const { from, to } = editor.state.selection;
+    setLinkSelection({ from, to });
     setShowLinkDialog(true);
   }, [editor]);
 
@@ -422,7 +422,7 @@ const BlogEditor = ({ value, onChange }) => {
             e.preventDefault();
             if (editor) {
               const { from, to } = editor.state.selection;
-              savedSelectionRef.current = { from, to };
+              setLinkSelection({ from, to });
             }
           }}
           onClick={() => setShowLinkDialog(true)}
@@ -442,8 +442,11 @@ const BlogEditor = ({ value, onChange }) => {
       {showLinkDialog && (
         <LinkDialog
           editor={editor}
-          savedSelection={savedSelectionRef.current}
-          onClose={() => setShowLinkDialog(false)}
+          savedSelection={linkSelection}
+          onClose={() => {
+            setShowLinkDialog(false);
+            setLinkSelection(null);
+          }}
         />
       )}
       {showImageDialog && (

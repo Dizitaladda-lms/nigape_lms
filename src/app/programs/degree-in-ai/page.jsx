@@ -323,7 +323,7 @@ export default function DegreeInAIPage() {
           <div className="text-center mb-14">
             <span className="text-xs uppercase tracking-widest text-[#FF40EB] font-semibold">Beyond the Classroom</span>
             <h2 className="mt-3 text-3xl sm:text-4xl lg:text-5xl font-bold text-white">Fun. Growth. Adventures.</h2>
-            <p className="mt-4 text-gray-400 max-w-2xl mx-auto">At NIGAPE, college isn't just about studying. It's about experiences, friendships, and memories that define who you become.</p>
+            <p className="mt-4 text-gray-400 max-w-2xl mx-auto">At NIGAPE, college isn&apos;t just about studying. It&apos;s about experiences, friendships, and memories that define who you become.</p>
           </div>
 
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -361,7 +361,7 @@ export default function DegreeInAIPage() {
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {testimonials.map((t) => (
               <div key={t.name} className="rounded-2xl bg-white p-6 shadow-xl">
-                <p className="text-2xl text-[#9234eb] mb-3">"</p>
+                <p className="text-2xl text-[#9234eb] mb-3">&ldquo;</p>
                 <p className="text-gray-700 text-sm leading-relaxed mb-5">{t.quote}</p>
                 <div className="flex items-center gap-3 border-t border-gray-100 pt-4">
                   <img src={t.avatar} alt={t.name} className="w-10 h-10 rounded-full object-cover" />
@@ -380,7 +380,7 @@ export default function DegreeInAIPage() {
       <section className="py-16 px-4 sm:px-6 bg-black">
         <div className="max-w-4xl mx-auto text-center">
           <h2 className="text-3xl sm:text-4xl font-bold text-white mb-4">Placement & Career Outcomes</h2>
-          <p className="text-gray-400 mb-10">Our degree graduates land roles across India's top tech companies and startups.</p>
+          <p className="text-gray-400 mb-10">Our degree graduates land roles across India&apos;s top tech companies and startups.</p>
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-6">
             {[
               { stat: "₹8L–₹18L", label: "Avg. Starting CTC" },

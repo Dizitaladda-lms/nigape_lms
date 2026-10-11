@@ -173,14 +173,52 @@ export async function getTopDiscoveredTags(limit = 10) {
 }
 
 export async function getBlogBySlug(slug) {
+  if (!slug) return null;
+  const decodedSlug = decodeURIComponent(slug).trim();
+
   try {
-    return await prisma.blog.findUnique({
-      where: { slug },
+    const blog = await prisma.blog.findFirst({
+      where: {
+        OR: [
+          { slug: decodedSlug },
+          { slug: decodedSlug.toLowerCase() },
+          { slug: slug.trim() },
+        ],
+      },
     });
+    if (blog) return blog;
   } catch (error) {
-    console.error("Error fetching blog by slug:", error);
-    return null;
+    console.error("Error fetching blog by slug (trying fallback query):", error);
+    try {
+      // Fallback query in case any optional columns are missing in custom DBs
+      const fallback = await prisma.blog.findFirst({
+        where: {
+          OR: [
+            { slug: decodedSlug },
+            { slug: decodedSlug.toLowerCase() },
+          ],
+        },
+        select: {
+          id: true,
+          title: true,
+          slug: true,
+          content: true,
+          excerpt: true,
+          coverImg: true,
+          tags: true,
+          author: true,
+          published: true,
+          createdAt: true,
+          updatedAt: true,
+        },
+      });
+      return fallback;
+    } catch (fallbackErr) {
+      console.error("Fallback query also failed:", fallbackErr);
+      return null;
+    }
   }
+  return null;
 }
 
 export async function getBlogSidebarData() {

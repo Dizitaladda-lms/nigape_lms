@@ -192,7 +192,7 @@ export default function PGInAIPage() {
           <div className="text-center mb-14">
             <span className="text-xs uppercase tracking-widest text-[#9234eb] font-semibold">The NIGAPE PG Difference</span>
             <h2 className="mt-3 text-3xl sm:text-4xl lg:text-5xl font-bold text-white">Why Choose a PG With Us?</h2>
-            <p className="mt-4 text-gray-400 max-w-2xl mx-auto">This is not a regular master's program. It's an elite 2-year experience that combines rigorous academics with real industry immersion, global exposure, and personal mentorship.</p>
+            <p className="mt-4 text-gray-400 max-w-2xl mx-auto">This is not a regular master&apos;s program. It&apos;s an elite 2-year experience that combines rigorous academics with real industry immersion, global exposure, and personal mentorship.</p>
           </div>
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {whyUs.map((item) => (
@@ -237,7 +237,7 @@ export default function PGInAIPage() {
           <div className="text-center mb-14">
             <span className="text-xs uppercase tracking-widest text-[#9234eb] font-semibold">Your PG Degree Choice</span>
             <h2 className="mt-3 text-3xl sm:text-4xl lg:text-5xl font-bold text-white">Two Post-Graduate Pathways</h2>
-            <p className="mt-4 text-gray-400 max-w-2xl mx-auto">An affordable government PG degree through DU SOL, or a premium private PG degree through Manipal University — both powered by NIGAPE's AI excellence.</p>
+            <p className="mt-4 text-gray-400 max-w-2xl mx-auto">An affordable government PG degree through DU SOL, or a premium private PG degree through Manipal University — both powered by NIGAPE&apos;s AI excellence.</p>
           </div>
 
           <div className="grid md:grid-cols-2 gap-8">
@@ -345,7 +345,7 @@ export default function PGInAIPage() {
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {testimonials.map((t) => (
               <div key={t.name} className="rounded-2xl bg-white p-6 shadow-xl">
-                <p className="text-2xl text-[#9234eb] mb-3">"</p>
+                <p className="text-2xl text-[#9234eb] mb-3">&ldquo;</p>
                 <p className="text-gray-700 text-sm leading-relaxed mb-5">{t.quote}</p>
                 <div className="flex items-center gap-3 border-t border-gray-100 pt-4">
                   <img src={t.avatar} alt={t.name} className="w-10 h-10 rounded-full object-cover" />
