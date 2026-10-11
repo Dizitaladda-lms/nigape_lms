@@ -110,8 +110,6 @@ export default function ContactPage() {
     "Deep Learning Professional",
   ];
 
-  const appsScriptUrl = process.env.NEXT_PUBLIC_GOOGLE_APPS_SCRIPT_URL;
-
   const validateForm = () => {
     const errors = {};
     if (!formData.name.trim()) errors.name = "Name is required";

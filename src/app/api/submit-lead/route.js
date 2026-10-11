@@ -42,88 +42,58 @@ export async function POST(request) {
       submittedAt: parsed.submittedAt || new Date().toISOString(),
     };
 
-    const tasks = [];
-
-    // 1. Submit lead to CRM (fetched strictly from environment variable)
+    // Submit lead strictly to CRM (fetched from environment variable)
     const crmEndpoint = normalizeUrl(
       process.env.CRM_LEADS_URL || process.env.CRM_ENDPOINT
     );
 
-    if (crmEndpoint) {
-      const crmPromise = (async () => {
-        try {
-          const res = await fetch(crmEndpoint, {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-              "Accept": "application/json",
-            },
-            body: JSON.stringify(leadPayload),
-          });
-          const json = await res.json().catch(() => null);
-          return { ok: res.ok, status: res.status, data: json };
-        } catch (err) {
-          console.error("CRM submission error:", err);
-          return { ok: false, error: err?.message || String(err) };
-        }
-      })();
-      tasks.push(crmPromise);
+    if (!crmEndpoint) {
+      console.warn("CRM endpoint is not configured (CRM_LEADS_URL / CRM_ENDPOINT).");
+      return NextResponse.json({
+        ok: true,
+        message: "Lead received (CRM endpoint not configured)",
+        crm: false,
+      });
     }
 
-    // 2. Submit lead to Google Apps Script / Google Form (if configured)
-    const appsScriptUrl = normalizeUrl(
-      process.env.GOOGLE_APPS_SCRIPT_URL || process.env.NEXT_PUBLIC_GOOGLE_APPS_SCRIPT_URL
-    );
+    try {
+      const res = await fetch(crmEndpoint, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Accept": "application/json",
+        },
+        body: JSON.stringify(leadPayload),
+      });
 
-    if (appsScriptUrl) {
-      const googlePromise = (async () => {
-        try {
-          const formBody = new URLSearchParams(leadPayload).toString();
-          const res = await fetch(appsScriptUrl, {
-            method: "POST",
-            headers: { "Content-Type": "application/x-www-form-urlencoded" },
-            body: formBody,
-            redirect: "follow",
-          });
-          const text = await res.text();
-          let json;
-          try {
-            json = JSON.parse(text);
-          } catch {
-            json = { ok: res.ok };
-          }
-          return { ok: res.ok, data: json };
-        } catch (err) {
-          console.error("Google Apps Script submission error:", err);
-          return { ok: false, error: err?.message || String(err) };
-        }
-      })();
-      tasks.push(googlePromise);
-    }
+      const json = await res.json().catch(() => null);
 
-    const results = await Promise.allSettled(tasks);
-    const crmResult = results[0]?.status === "fulfilled" ? results[0].value : null;
-    const googleResult = results[1]?.status === "fulfilled" ? results[1].value : null;
+      if (!res.ok) {
+        console.error("CRM submission returned non-OK status:", res.status, json);
+        return NextResponse.json(
+          {
+            ok: false,
+            error: "Unable to submit lead to CRM. Please try again.",
+          },
+          { status: res.status >= 500 ? 502 : 400 }
+        );
+      }
 
-    // Check if at least one submission succeeded
-    const isSuccess = Boolean(crmResult?.ok || googleResult?.ok);
-
-    if (!isSuccess && !crmResult?.ok) {
+      return NextResponse.json({
+        ok: true,
+        message: "Lead captured successfully",
+        crm: true,
+      });
+    } catch (crmErr) {
+      console.error("CRM submission error:", crmErr);
       return NextResponse.json(
         {
           ok: false,
-          error: crmResult?.error || "Unable to submit lead at this moment. Please try again.",
+          error: "Unable to reach CRM server. Please try again later.",
         },
-        { status: 500 }
+        { status: 502 }
       );
     }
-
-    return NextResponse.json({
-      ok: true,
-      message: "Lead captured successfully",
-      crm: crmResult?.ok ?? false,
-      google: googleResult?.ok ?? (appsScriptUrl ? false : "not_configured"),
-    });
   } catch (err) {
     console.error("POST /api/submit-lead general error:", err);
     return NextResponse.json({ ok: false, error: String(err?.message ?? err) }, { status: 500 });

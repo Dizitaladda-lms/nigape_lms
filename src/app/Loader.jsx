@@ -82,65 +82,65 @@ export default function NeoLeafLoader() {
 
       {/* Main container with perspective */}
       <div 
-        className="relative w-full max-w-4xl px-4 sm:px-6 lg:px-8"
+        className="relative flex w-full max-w-6xl flex-col items-center justify-center px-6 sm:px-10 lg:px-12"
         style={{
           perspective: '1200px',
           transformStyle: 'preserve-3d'
         }}
       >
         {/* Logo text with liquid fill effect */}
-        <div className="mb-8 relative">
-          {/* Background dark gray text (for depth) */}
-          <div 
-            className="loader-bg text-5xl sm:text-7xl md:text-9xl lg:text-[10rem] xl:text-[12rem] font-black tracking-tight absolute top-0 left-1/2 -translate-x-1/2 text-center"
-            style={{
-              fontFamily: 'Inter, system-ui, sans-serif',
-              color: '#2a2a2a',
-              letterSpacing: '-0.02em',
-              WebkitTextStroke: '1px #1a1a1a'
-            }}
-          >
-            {fullText}
-          </div>
-          
-          {/* White text with liquid fill mask */}
-          <div 
-            className="relative overflow-hidden"
-            style={{
-              clipPath: `inset(${100 - progress}% 0 0 0)`,
-              transition: 'clip-path 0.3s ease-out'
-            }}
-          >
+        <div className="relative mb-6 flex w-full items-center justify-center py-4">
+          <div className="relative inline-grid place-items-center px-4 py-2">
+            {/* Background dark gray text (for depth) */}
             <div 
-              className="loader-main text-5xl sm:text-7xl md:text-9xl lg:text-[10rem] xl:text-[12rem] font-black tracking-tight text-center"
+              className="loader-bg col-start-1 row-start-1 select-none whitespace-nowrap text-center text-[clamp(2.75rem,11vw,8.5rem)] font-black leading-[1.1] tracking-[-0.03em]"
               style={{
-                fontFamily: 'Inter, system-ui, sans-serif',
-                color: '#FFFFFF',
-                letterSpacing: '-0.02em',
-                transformStyle: 'preserve-3d',
-                transition: isComplete ? 'transform 0.8s cubic-bezier(0.22, 1, 0.36, 1)' : 'none',
-                transform: isComplete ? 'scale(1.05) translateZ(30px) rotateX(-3deg)' : 'scale(1) translateZ(0)',
-                textShadow: '0 0 8px rgba(255, 255, 255, 0.2)'
+                fontFamily: 'var(--font-geist), Inter, system-ui, sans-serif',
+                color: '#2a2a2a',
+                WebkitTextStroke: '1px #1a1a1a'
               }}
             >
-              {fullText.split('').map((char, index) => (
-                <span
-                  key={index}
-                  className="inline-block"
-                  style={{
-                    animation: isComplete 
-                      ? `popForward 0.55s cubic-bezier(.2,.9,.3,1) ${index * 0.05}s both` 
-                      : `fadeIn 0.45s ease-out ${index * 0.06}s both`,
-                    display: 'inline-block',
-                    willChange: 'transform, opacity',
-                    WebkitBackfaceVisibility: 'hidden',
-                    backfaceVisibility: 'hidden',
-                    transformStyle: 'preserve-3d'
-                  }}
-                >
-                  {char}
-                </span>
-              ))}
+              {fullText}
+            </div>
+            
+            {/* White text with liquid fill mask */}
+            <div 
+              className="col-start-1 row-start-1 flex items-center justify-center"
+              style={{
+                clipPath: isComplete ? 'inset(-20% -20% -20% -20%)' : `inset(${100 - progress}% -10% -10% -10%)`,
+                transition: 'clip-path 0.3s ease-out'
+              }}
+            >
+              <div 
+                className="loader-main whitespace-nowrap text-center text-[clamp(2.75rem,11vw,8.5rem)] font-black leading-[1.1] tracking-[-0.03em]"
+                style={{
+                  fontFamily: 'var(--font-geist), Inter, system-ui, sans-serif',
+                  color: '#FFFFFF',
+                  transformStyle: 'preserve-3d',
+                  transition: isComplete ? 'transform 0.8s cubic-bezier(0.22, 1, 0.36, 1)' : 'none',
+                  transform: isComplete ? 'scale(1.04) translateZ(24px) rotateX(-2deg)' : 'scale(1) translateZ(0)',
+                  textShadow: '0 0 12px rgba(255, 255, 255, 0.22)'
+                }}
+              >
+                {fullText.split('').map((char, index) => (
+                  <span
+                    key={index}
+                    className="inline-block"
+                    style={{
+                      animation: isComplete 
+                        ? `popForward 0.55s cubic-bezier(.2,.9,.3,1) ${index * 0.05}s both` 
+                        : `fadeIn 0.45s ease-out ${index * 0.06}s both`,
+                      display: 'inline-block',
+                      willChange: 'transform, opacity',
+                      WebkitBackfaceVisibility: 'hidden',
+                      backfaceVisibility: 'hidden',
+                      transformStyle: 'preserve-3d'
+                    }}
+                  >
+                    {char}
+                  </span>
+                ))}
+              </div>
             </div>
           </div>
         </div>
@@ -208,12 +208,9 @@ export default function NeoLeafLoader() {
 
         /* Mobile-specific overrides */
         @media (max-width: 640px) {
-          .loader-bg {
-            font-size: clamp(2.2rem, 22vw, 6.5rem) !important;
-            top: -2vh;
-          }
+          .loader-bg,
           .loader-main {
-            font-size: clamp(2.2rem, 22vw, 6.5rem) !important;
+            font-size: clamp(2.4rem, 15vw, 4.75rem) !important;
           }
           .glow {
             width: 160px !important;

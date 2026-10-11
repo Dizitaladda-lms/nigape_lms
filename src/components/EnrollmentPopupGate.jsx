@@ -21,7 +21,6 @@ export default function EnrollmentPopupGate() {
   const [submitState, setSubmitState] = useState({ status: "idle", message: "" });
 
   const isOpen = searchParams?.get("enroll") === "1";
-  const appsScriptUrl = process.env.NEXT_PUBLIC_GOOGLE_APPS_SCRIPT_URL;
 
   const nextUrlWithoutEnroll = useMemo(() => {
     const params = new URLSearchParams(searchParams?.toString() || "");
