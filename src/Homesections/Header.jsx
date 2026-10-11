@@ -9,6 +9,7 @@ export default function Header() {
   const pathname = usePathname();
   const router = useRouter();
   const normalizedPath = (pathname || "").toLowerCase();
+  const isBlogPage = normalizedPath.startsWith("/blog");
   const [menuOpen, setMenuOpen] = useState(false);
 
   const prefetchBlog = useCallback(() => {
@@ -51,7 +52,7 @@ export default function Header() {
           <img
             src="/Nigapepic/nigape.svg"
             alt="Nigape Logo"
-            className="h-[150px] w-auto"
+            className={`h-[150px] w-auto${isBlogPage ? " blog-page-logo" : ""}`}
           />
         </Link>
       </div>
@@ -119,7 +120,7 @@ export default function Header() {
           <img
             src="/Nigapepic/nigape.svg"
             alt="Nigape Logo"
-            className="h-16 w-auto object-contain"
+            className={`h-16 w-auto object-contain${isBlogPage ? " blog-page-logo" : ""}`}
           />
         </Link>
 
