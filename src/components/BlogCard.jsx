@@ -25,15 +25,14 @@ const BlogCard = ({ blog, baseUrl }) => {
   const isExternal = Boolean(rawCover && /^(https?:)?\/\//i.test(rawCover));
   const hasCover = Boolean(rawCover);
   const cover = hasCover ? rawCover : null;
-  const tags = blog.tags?.slice(0, 3) || [];
+  const primaryTag = blog.tags?.[0] || "";
 
   return (
-    <article className="group relative flex flex-col rounded-2xl overflow-hidden border border-[#9234eb]/25 bg-gradient-to-br from-[#0d0d1a] to-[#120820] hover:border-[#9234eb]/60 hover:shadow-xl hover:shadow-[#9234eb]/10 transition-all duration-300 h-full">
+    <article className="blog-card">
       {/* Cover image */}
       <Link
         href={`/blog/${blog.slug}`}
-        className="block overflow-hidden"
-        style={{ position: "relative", paddingTop: "56.25%" }}
+        className="blog-card__image"
         aria-label={`Read ${blog.title}`}
       >
         {hasCover ? (
@@ -42,64 +41,46 @@ const BlogCard = ({ blog, baseUrl }) => {
             alt={blog.title}
             fill
             sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 400px"
-            style={{ objectFit: "cover", objectPosition: "center" }}
+            style={{ objectFit: "cover" }}
             unoptimized={isExternal}
             loading="lazy"
-            className="group-hover:scale-105 transition-transform duration-500"
           />
         ) : (
-          <div className="absolute inset-0 bg-gradient-to-br from-[#9234eb]/25 to-[#FF40EB]/15 flex items-center justify-center">
-            <span className="text-4xl">✍️</span>
+          <div className="blog-card__image--placeholder">
+            <span>✍️ {blog.title}</span>
           </div>
         )}
-        {/* gradient overlay */}
-        <div className="absolute inset-0 bg-gradient-to-t from-[#0d0d1a]/80 via-transparent to-transparent" />
       </Link>
 
       {/* Body */}
-      <div className="flex flex-col flex-1 p-5 gap-3">
+      <div className="blog-card__body">
         {/* Meta */}
-        <div className="flex items-center gap-2 text-white/40 text-xs">
-          <time dateTime={blog.createdAt}>{formatDate(blog.createdAt)}</time>
-          {tags.length > 0 && (
+        <div className="blog-card__meta">
+          <span>{formatDate(blog.createdAt)}</span>
+          {primaryTag ? (
             <>
-              <span aria-hidden="true">·</span>
-              <span>{tags.length} topic{tags.length > 1 ? "s" : ""}</span>
+              <span>•</span>
+              <span className="uppercase tracking-wider text-[11px] font-semibold">{primaryTag}</span>
             </>
-          )}
+          ) : null}
         </div>
 
         {/* Title */}
-        <h3 className="text-white font-semibold text-base leading-snug line-clamp-2 group-hover:text-[#c084fc] transition-colors">
+        <h3>
           <Link href={`/blog/${blog.slug}`}>{blog.title}</Link>
         </h3>
 
-        {/* Excerpt / Description */}
-        <p className="blog-card__excerpt text-white/90 text-sm leading-relaxed line-clamp-3 flex-1">
+        {/* Excerpt */}
+        <p className="blog-card__desc">
           {blog.excerpt || toExcerpt(blog.content)}
         </p>
-
-        {/* Tags */}
-        {tags.length > 0 && (
-          <div className="flex flex-wrap gap-1.5">
-            {tags.map((tag) => (
-              <Link
-                key={tag}
-                href={`/blog?tag=${encodeURIComponent(tag)}`}
-                className="px-2 py-0.5 rounded-full text-xs border border-[#9234eb]/30 bg-[#9234eb]/10 text-[#c084fc] hover:bg-[#9234eb]/25 transition-colors"
-              >
-                #{tag}
-              </Link>
-            ))}
-          </div>
-        )}
 
         {/* CTA */}
         <Link
           href={`/blog/${blog.slug}`}
-          className="mt-auto inline-flex items-center gap-1 text-[#9234eb] hover:text-[#FF40EB] text-sm font-semibold transition-colors"
+          className="blog-card__cta"
         >
-          Read more <span className="group-hover:translate-x-1 transition-transform inline-block">→</span>
+          Continue reading →
         </Link>
       </div>
     </article>
@@ -107,4 +88,3 @@ const BlogCard = ({ blog, baseUrl }) => {
 };
 
 export default BlogCard;
-
