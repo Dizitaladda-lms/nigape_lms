@@ -5,6 +5,7 @@ import { getBaseUrl } from "@/lib/base-url";
 import { getBlogBySlug, getBlogSidebarData } from "@/lib/blogs";
 import BlogShell from "@/components/BlogShell";
 import BlogSidebar from "@/components/BlogSidebar";
+import BlogToc from "@/components/BlogToc";
 import "@/styles/blog.css";
 
 const formatDate = (value) =>
@@ -12,8 +13,75 @@ const formatDate = (value) =>
 
 const toText = (html) => (html || "").replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim();
 
-const normalizeBlogHeadings = (html) =>
-  (html || "").replace(/<\/?h1\b/gi, (tag) => tag.replace(/h1/i, "h2"));
+const prepareBlogContentAndToc = (rawHtml) => {
+  if (!rawHtml) return { content: "", toc: [] };
+
+  // 1. Convert h1 inside body content to h2
+  let html = rawHtml.replace(/<\/?h1\b/gi, (tag) => tag.replace(/h1/i, "h2"));
+
+  // 2. Strip inline font-family / font-size / line-height styles from pasted rich-text so nidads typography rules take full effect
+  html = html.replace(/\sstyle="([^"]*)"/gi, (match, styleStr) => {
+    const cleaned = styleStr
+      .split(";")
+      .map((s) => s.trim())
+      .filter(
+        (s) =>
+          s &&
+          !/^(font-family|font-size|line-height|font)\s*:/i.test(s)
+      )
+      .join("; ");
+    return cleaned ? ` style="${cleaned}"` : "";
+  });
+
+  // 3. Extract h2 headings for Table of Contents and inject anchor IDs
+  const toc = [];
+  const usedIds = new Set();
+  let counter = 0;
+
+  html = html.replace(/<h2([^>]*)>([\s\S]*?)<\/h2>/gi, (match, attrs, inner) => {
+    const plain = inner
+      .replace(/<[^>]+>/g, " ")
+      .replace(/&nbsp;/gi, " ")
+      .replace(/\s+/g, " ")
+      .trim();
+
+    if (!plain) return match;
+
+    // Check if an id attribute already exists
+    const existingIdMatch = attrs.match(/\bid=["']([^"']+)["']/i);
+    let slugId = existingIdMatch ? existingIdMatch[1] : "";
+
+    if (!slugId) {
+      slugId = plain
+        .toLowerCase()
+        .replace(/&[a-z0-9#]+;/gi, "")
+        .replace(/[^a-z0-9\s-]/g, "")
+        .trim()
+        .replace(/\s+/g, "-")
+        .replace(/-+/g, "-");
+    }
+
+    if (!slugId) {
+      slugId = `section-${++counter}`;
+    }
+
+    let uniqueId = slugId;
+    let dup = 2;
+    while (usedIds.has(uniqueId)) {
+      uniqueId = `${slugId}-${dup++}`;
+    }
+    usedIds.add(uniqueId);
+
+    toc.push({ id: uniqueId, text: plain, level: "h2" });
+
+    if (existingIdMatch) {
+      return match;
+    }
+    return `<h2 id="${uniqueId}"${attrs}>${inner}</h2>`;
+  });
+
+  return { content: html, toc };
+};
 
 const calculateReadingMinutes = (html) => {
   const words = toText(html).split(" ").filter(Boolean).length;
@@ -79,7 +147,7 @@ export default async function BlogDetails(props) {
 
   const { latestPosts, categories } = await getBlogSidebarData();
   const cover = blog.coverImg?.trim();
-  const content = normalizeBlogHeadings(blog.content);
+  const { content, toc } = prepareBlogContentAndToc(blog.content);
   const isExternalCover = Boolean(cover && /^(https?:)?\/\//i.test(cover));
   const hasCover = Boolean(cover);
   const imageSrc = hasCover ? cover : "/placeholder.svg";
@@ -98,7 +166,7 @@ export default async function BlogDetails(props) {
     <BlogShell>
       <main id="main-content" className="blog-detail" role="main">
         <div className="blog-detail__layout">
-          <article aria-labelledby="blog-title">
+          <article className="blog-detail__main" aria-labelledby="blog-title">
             {customJsonLd ? (
               <script
                 type="application/ld+json"
@@ -148,6 +216,8 @@ export default async function BlogDetails(props) {
                 </span>
               ) : null}
             </div>
+
+            <BlogToc items={toc} />
 
             <div className="content" dangerouslySetInnerHTML={{ __html: content }} />
 
