@@ -74,8 +74,10 @@ const BlogCard = ({ blog, baseUrl }) => {
           <Link href={`/blog/${blog.slug}`}>{blog.title}</Link>
         </h3>
 
-        {/* Excerpt */}
-        <p className="text-white/50 text-sm leading-relaxed line-clamp-3 flex-1">{blog.excerpt || toExcerpt(blog.content)}</p>
+        {/* Excerpt / Description */}
+        <p className="blog-card__excerpt text-white/90 text-sm leading-relaxed line-clamp-3 flex-1">
+          {blog.excerpt || toExcerpt(blog.content)}
+        </p>
 
         {/* Tags */}
         {tags.length > 0 && (

@@ -940,47 +940,28 @@ body:has(.blog-shell.blog-dark) .blog-page-logo {
   background: linear-gradient(135deg, #0d0d1a, #120820) !important;
 }
 
-.blog-shell:not(.blog-dark) .blog-listing [class*="text-white"] {
-  color: var(--blog-muted) !important;
+/* ============================================= */
+/* Blog Card Typography on Dark Cards            */
+/* ============================================= */
+.blog-card__excerpt,
+.blog-listing article p.blog-card__excerpt,
+.blog-listing article p,
+.blog-card p {
+  color: rgba(255, 255, 255, 0.88) !important;
+  font-size: 0.88rem !important;
+  line-height: 1.6 !important;
 }
 
-.blog-shell:not(.blog-dark) .blog-listing h1,
-.blog-shell:not(.blog-dark) .blog-listing h2,
-.blog-shell:not(.blog-dark) .blog-listing h3 {
-  color: var(--blog-ink) !important;
+.blog-listing article h3 a,
+.blog-card h3 a {
+  color: #ffffff !important;
 }
 
-.blog-shell:not(.blog-dark) .blog-listing input {
-  color: var(--blog-ink) !important;
+.blog-listing article time,
+.blog-card time {
+  color: rgba(255, 255, 255, 0.6) !important;
 }
 
-.blog-shell:not(.blog-dark) .blog-listing .blog-card {
-  border-color: var(--blog-border) !important;
-  color: var(--blog-ink) !important;
-  background: var(--blog-panel) !important;
-  box-shadow: 0 8px 24px rgba(31, 68, 130, 0.07);
-}
-
-.blog-shell:not(.blog-dark) .blog-listing .blog-card h3,
-.blog-shell:not(.blog-dark) .blog-listing .blog-card p,
-.blog-shell:not(.blog-dark) .blog-listing .blog-card time {
-  color: var(--blog-ink) !important;
-}
-
-.blog-shell:not(.blog-dark) .blog-listing .blog-card p,
-.blog-shell:not(.blog-dark) .blog-listing .blog-card time {
-  color: var(--blog-muted) !important;
-}
-
-.blog-shell.blog-dark .blog-listing .blog-card {
-  border-color: rgba(56, 182, 255, 0.2) !important;
-  color: #fff !important;
-  background: linear-gradient(135deg, #05070c, #0d111a) !important;
-}
-
-.blog-shell.blog-dark .blog-listing [class*="text-white"] {
-  color: inherit;
-}
 
 /* Skeleton Shimmer */
 @keyframes skeleton-shimmer {
