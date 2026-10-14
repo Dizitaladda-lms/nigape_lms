@@ -979,6 +979,8 @@ small {
 .auth-form h2 {
   margin: 0;
   font-size: 1.9rem;
+  color: #ffffff;
+  font-weight: 700;
 }
 
 .auth-form label {
@@ -996,19 +998,20 @@ small {
   padding: 0 1rem;
   font-size: 1rem;
   transition: border-color 0.2s ease, box-shadow 0.2s ease;
-  color: #e8eefb;
-  background: #7d9ae0;
+  color: #ffffff;
+  background: #152038;
 }
 
 .auth-form input:focus {
   outline: none;
   border-color: #6e9fff;
   box-shadow: 0 0 0 4px rgba(110, 159, 255, 0.18);
+  background: #1a2744;
 }
 
 .auth-form__hint {
   margin: 0;
-  color: var(--admin-muted);
+  color: #9caacf;
   text-align: center;
 }
 

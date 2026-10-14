@@ -13,6 +13,16 @@ export const BLOG_CARD_SELECT = {
   published: true,
 };
 
+export const OFFICIAL_CATEGORIES = [
+  "Gen AI",
+  "Prompt Engineering",
+  "Machine Learning",
+  "Career and Course",
+  "Brand Strategy",
+  "Tools and Resources",
+  "Latest News",
+];
+
 // In-memory cache for ultra-fast listing response
 const cacheStore = new Map();
 const CACHE_TTL_MS = 60 * 1000; // 60 seconds
@@ -34,6 +44,7 @@ export async function getBlogListing({
   limit = 18,
   search = "",
   tag = "",
+  category = "",
   relatedTo = "",
   excludeId = "",
   excludeSlug = "",
@@ -44,7 +55,8 @@ export async function getBlogListing({
   const safePage = Math.max(Number(page) || 1, 1);
   const skip = (safePage - 1) * safeLimit;
   const cleanSearch = (search || "").trim();
-  const cleanTag = (tag || "").trim();
+  const rawTag = (tag || category || "").trim();
+  const cleanTag = rawTag;
 
   const cacheKey = getCacheKey({
     safePage,
@@ -78,7 +90,66 @@ export async function getBlogListing({
   }
 
   if (cleanTag) {
-    filters.push({ tags: { has: cleanTag.toLowerCase() } });
+    const lowerTag = cleanTag.toLowerCase();
+    const tagConditions = [
+      { tags: { has: cleanTag } },
+      { tags: { has: lowerTag } },
+      { tags: { has: cleanTag.toUpperCase() } },
+    ];
+
+    if (lowerTag === "gen ai" || lowerTag === "generative ai") {
+      tagConditions.push(
+        { tags: { has: "generative ai" } },
+        { title: { contains: "Generative AI", mode: "insensitive" } },
+        { title: { contains: "Gen AI", mode: "insensitive" } },
+        { excerpt: { contains: "Generative AI", mode: "insensitive" } }
+      );
+    } else if (lowerTag === "prompt engineering") {
+      tagConditions.push(
+        { tags: { has: "prompt engineering" } },
+        { title: { contains: "Prompt Engineering", mode: "insensitive" } },
+        { excerpt: { contains: "Prompt Engineering", mode: "insensitive" } }
+      );
+    } else if (lowerTag === "machine learning") {
+      tagConditions.push(
+        { tags: { has: "machine learning" } },
+        { tags: { has: "ml" } },
+        { title: { contains: "Machine Learning", mode: "insensitive" } },
+        { excerpt: { contains: "Machine Learning", mode: "insensitive" } }
+      );
+    } else if (lowerTag.includes("career") || lowerTag.includes("course")) {
+      tagConditions.push(
+        { tags: { has: "career and course" } },
+        { title: { contains: "Course", mode: "insensitive" } },
+        { title: { contains: "Career", mode: "insensitive" } },
+        { title: { contains: "Placement", mode: "insensitive" } }
+      );
+    } else if (lowerTag.includes("tools") || lowerTag.includes("resources")) {
+      tagConditions.push(
+        { tags: { has: "tools and resources" } },
+        { title: { contains: "Tools", mode: "insensitive" } },
+        { title: { contains: "Resources", mode: "insensitive" } }
+      );
+    } else if (lowerTag.includes("brand")) {
+      tagConditions.push(
+        { tags: { has: "brand strategy" } },
+        { title: { contains: "Brand", mode: "insensitive" } }
+      );
+    } else if (lowerTag.includes("news")) {
+      tagConditions.push(
+        { tags: { has: "latest news" } },
+        { title: { contains: "News", mode: "insensitive" } },
+        { title: { contains: "Update", mode: "insensitive" } },
+        { title: { contains: "2026", mode: "insensitive" } }
+      );
+    } else {
+      tagConditions.push(
+        { title: { contains: cleanTag, mode: "insensitive" } },
+        { excerpt: { contains: cleanTag, mode: "insensitive" } }
+      );
+    }
+
+    filters.push({ OR: tagConditions });
   }
 
   if (excludeId) {
@@ -244,7 +315,10 @@ export async function getBlogSidebarData() {
     ]);
 
     const categories = Array.from(
-      new Set(publishedPosts.flatMap((post) => post.tags || []))
+      new Set([
+        ...OFFICIAL_CATEGORIES,
+        ...publishedPosts.flatMap((post) => post.tags || []),
+      ])
     ).slice(0, 12);
 
     return {

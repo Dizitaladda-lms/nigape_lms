@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import BlogEditor from "@/components/BlogEditor";
 import { withAdminCsrf } from "@/lib/client-csrf";
+import { OFFICIAL_CATEGORIES } from "@/lib/blogs";
 
 const baseState = {
   title: "",
@@ -324,17 +325,87 @@ const BlogForm = ({ initialData = null, mode = "create" }) => {
           <h3>Post Settings</h3>
 
           <div className="admin-settings-grid">
+            <div className="field">
+              <span>Category</span>
+              <select
+                onChange={(event) => {
+                  const cat = event.target.value;
+                  if (!cat) return;
+                  const current = formValues.tags
+                    .split(",")
+                    .map((t) => t.trim())
+                    .filter(Boolean);
+                  if (!current.some((t) => t.toLowerCase() === cat.toLowerCase())) {
+                    setField("tags", [cat, ...current].join(", "));
+                  }
+                }}
+                defaultValue=""
+              >
+                <option value="">Choose a Category...</option>
+                {OFFICIAL_CATEGORIES.map((cat) => (
+                  <option key={cat} value={cat}>
+                    {cat}
+                  </option>
+                ))}
+              </select>
+              <div style={{ display: "flex", flexWrap: "wrap", gap: "6px", marginTop: "8px" }}>
+                {OFFICIAL_CATEGORIES.map((cat) => {
+                  const isSelected = formValues.tags
+                    .toLowerCase()
+                    .includes(cat.toLowerCase());
+                  return (
+                    <button
+                      key={cat}
+                      type="button"
+                      onClick={() => {
+                        const current = formValues.tags
+                          .split(",")
+                          .map((t) => t.trim())
+                          .filter(Boolean);
+                        if (isSelected) {
+                          setField(
+                            "tags",
+                            current
+                              .filter((t) => t.toLowerCase() !== cat.toLowerCase())
+                              .join(", ")
+                          );
+                        } else {
+                          setField("tags", [cat, ...current].join(", "));
+                        }
+                      }}
+                      style={{
+                        fontSize: "11px",
+                        padding: "3px 9px",
+                        borderRadius: "999px",
+                        cursor: "pointer",
+                        border: isSelected
+                          ? "1px solid #38b6ff"
+                          : "1px solid rgba(255,255,255,0.18)",
+                        background: isSelected
+                          ? "rgba(56,182,255,0.22)"
+                          : "rgba(255,255,255,0.05)",
+                        color: isSelected ? "#38b6ff" : "rgba(255,255,255,0.75)",
+                        fontWeight: isSelected ? "600" : "normal",
+                      }}
+                    >
+                      {isSelected ? `✓ ${cat}` : `+ ${cat}`}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+
             <label className="field">
-              <span>Tags</span>
+              <span>Tags / Topics</span>
               <input
                 type="text"
                 name="tags"
-                placeholder="marketing, release, seo"
+                placeholder="Gen AI, prompt engineering, tips"
                 value={formValues.tags}
                 onChange={(event) => setField("tags", event.target.value)}
                 aria-describedby={tagsHelpId}
               />
-              <small id={tagsHelpId}>Comma-separated topics used for search and related posts.</small>
+              <small id={tagsHelpId}>Comma-separated topics used for search, category filtering and related posts.</small>
             </label>
 
             <label className="field">

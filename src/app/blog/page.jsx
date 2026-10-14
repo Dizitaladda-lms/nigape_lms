@@ -2,7 +2,7 @@ import Link from "next/link";
 import BlogCard from "@/components/BlogCard";
 import BlogShell from "@/components/BlogShell";
 import { getBaseUrl } from "@/lib/base-url";
-import { getBlogListing, getTopDiscoveredTags } from "@/lib/blogs";
+import { getBlogListing, OFFICIAL_CATEGORIES } from "@/lib/blogs";
 import "@/styles/blog.css";
 
 export const metadata = {
@@ -38,7 +38,7 @@ export default async function BlogPage({ searchParams }) {
   const resolvedParams = { ...params };
   const page = Number(resolvedParams.page) || 1;
   const searchQuery = resolvedParams.search || "";
-  const currentTag = resolvedParams.tag || "";
+  const currentCategory = (resolvedParams.category || resolvedParams.tag || "").trim();
   const baseUrl = await getBaseUrl();
 
   let data;
@@ -46,7 +46,7 @@ export default async function BlogPage({ searchParams }) {
     data = await getBlogListing({
       page,
       search: searchQuery,
-      tag: currentTag,
+      category: currentCategory,
       limit: 18,
       useCache: true,
     });
@@ -56,10 +56,9 @@ export default async function BlogPage({ searchParams }) {
   }
 
   const blogs = data?.data || [];
-  const hasFilters = Boolean(searchQuery || currentTag);
+  const hasFilters = Boolean(searchQuery || currentCategory);
   const gridBlogs = blogs;
   const totalArticles = data?.pagination?.total ?? blogs.length;
-  const discoveredTags = await getTopDiscoveredTags(10);
 
   return (
     <BlogShell>
@@ -83,10 +82,11 @@ export default async function BlogPage({ searchParams }) {
           </p>
 
           <div className="blog-index__hero-tags">
-            <span className="blog-index__hero-tag">🤖 Generative AI</span>
-            <span className="blog-index__hero-tag">⚡ Prompt Engineering</span>
-            <span className="blog-index__hero-tag">💡 LLM Guides</span>
-            <span className="blog-index__hero-tag">🚀 Career Insights</span>
+            <Link href="/blog?category=Gen%20AI" className="blog-index__hero-tag">🤖 Gen AI</Link>
+            <Link href="/blog?category=Prompt%20Engineering" className="blog-index__hero-tag">⚡ Prompt Engineering</Link>
+            <Link href="/blog?category=Machine%20Learning" className="blog-index__hero-tag">🧠 Machine Learning</Link>
+            <Link href="/blog?category=Career%20and%20Course" className="blog-index__hero-tag">🎓 Career &amp; Course</Link>
+            <Link href="/blog?category=Tools%20and%20Resources" className="blog-index__hero-tag">🛠️ Tools &amp; Resources</Link>
           </div>
 
           <div className="blog-simple-controls">
@@ -97,6 +97,7 @@ export default async function BlogPage({ searchParams }) {
               action="/blog"
               method="GET"
             >
+              {currentCategory && <input type="hidden" name="category" value={currentCategory} />}
               <input
                 type="search"
                 placeholder="Search articles…"
@@ -109,20 +110,20 @@ export default async function BlogPage({ searchParams }) {
 
             <nav className="blog-cat-bar" aria-label="Filter by category">
               <Link
-                className={`blog-cat-pill ${!currentTag ? "blog-cat-pill--active" : ""}`}
+                className={`blog-cat-pill ${!currentCategory ? "blog-cat-pill--active" : ""}`}
                 href="/blog"
               >
                 All
               </Link>
-              {discoveredTags.map((tag) => {
-                const isActive = tag.toLowerCase() === currentTag.toLowerCase();
+              {OFFICIAL_CATEGORIES.map((cat) => {
+                const isActive = cat.toLowerCase() === currentCategory.toLowerCase();
                 return (
                   <Link
-                    key={tag}
+                    key={cat}
                     className={`blog-cat-pill ${isActive ? "blog-cat-pill--active" : ""}`}
-                    href={`/blog?tag=${encodeURIComponent(tag)}`}
+                    href={`/blog?category=${encodeURIComponent(cat)}`}
                   >
-                    {tag}
+                    {cat}
                   </Link>
                 );
               })}
@@ -134,7 +135,7 @@ export default async function BlogPage({ searchParams }) {
         {hasFilters && (
           <div className="blog-filter-bar">
             <span className="blog-filter-chip">
-              Filtering by: <strong>{currentTag || searchQuery}</strong>
+              Filtering by: <strong>{currentCategory || searchQuery}</strong>
               <Link href="/blog" className="blog-filter-chip__clear" aria-label="Clear filter">
                 ×
               </Link>
