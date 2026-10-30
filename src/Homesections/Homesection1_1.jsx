@@ -9,16 +9,16 @@ const aiTech = [
   { name: "Llama 3", logo: "https://cdn.simpleicons.org/meta/9234eb" },
   { name: "Claude 3", logo: "https://cdn.simpleicons.org/anthropic/9234eb" },
   { name: "Gemini", logo: "https://cdn.simpleicons.org/google/9234eb" },
-  { name: "GPT-4", logo: "https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/openai.svg" },
+  { name: "GPT-4", logo: "/logos/openai.svg" },
   { name: "Hugging Face", logo: "https://cdn.simpleicons.org/huggingface/9234eb" },
-  { name: "SageMaker", logo: "https://www.awsicon.com/icon/sagemaker/64.png" },
+  { name: "SageMaker", logo: "/logos/sagemaker.svg" },
   { name: "Vector DBs", logo: "https://cdn.simpleicons.org/databricks/9234eb" },
   { name: "RAG", logo: "https://cdn.simpleicons.org/bookstack/9234eb" },
-  { name: "Fine-tuning", logo: "https://cdn.simpleicons.org/slidershare/9234eb" },
+  { name: "Fine-tuning", logo: "/logos/tuning.svg" },
   { name: "AI Agents", logo: "https://cdn.simpleicons.org/robotframework/9234eb" },
-  { name: "Prompt Engineering", logo: "https://cdn.simpleicons.org/openai/9234eb" },
+  { name: "Prompt Engineering", logo: "/logos/openai.svg" },
   { name: "MLOps", logo: "https://cdn.simpleicons.org/mlflow/9234eb" },
-  { name: "LLM APIs", logo: "https://cdn.simpleicons.org/api/9234eb" },
+  { name: "LLM APIs", logo: "/logos/api.svg" },
 ];
 
 // Dynamically load "Press Start 2P" (pixel font)
