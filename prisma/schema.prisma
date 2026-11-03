@@ -45,3 +45,23 @@ model AdminAudit {
   @@index([action, createdAt])
   @@index([entity, entityId])
 }
+
+model SeoMetadata {
+  id              String   @id @default(cuid())
+  path            String   @unique
+  entityType      String   @default("page")
+  entityName      String?
+  metaTitle       String?
+  metaDescription String?
+  keywords        String?
+  canonicalUrl    String?
+  ogTitle         String?
+  ogDescription   String?
+  ogImage         String?
+  noIndex         Boolean  @default(false)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@index([path])
+  @@index([entityType])
+}

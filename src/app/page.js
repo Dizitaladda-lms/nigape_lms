@@ -15,33 +15,17 @@ import HomesectionPGP from "@/Homesections/HomesectionPGP";
 import HomesectionPG from "@/Homesections/HomesectionPG";
 import PopularDiplomaCourses from "@/Homesections/PopularDiplomaCourses";
 
-export const metadata = {
-  title: "Generative AI & Prompt Engineering Course in Delhi | NIGAPE",
-  description:
-    "Join NIGAPE for Generative AI & Prompt Engineering in Delhi. Learn AI tools, LLMs, prompting, agents and real projects with mentor support.",
-  keywords: [
-    "generative AI course in Delhi",
-    "prompt engineering course in Delhi",
-    "generative AI and prompt engineering course",
-    "generative AI certification course",
-    "prompt engineering certification",
-    "best generative AI course in Delhi",
-    "generative AI training in Delhi",
-    "AI prompt engineering course",
-    "generative AI course with placement",
-    "generative AI institute in Delhi",
-  ],
-  alternates: {
-    canonical: "https://www.nigape.com/",
-  },
-  openGraph: {
-    title: "Generative AI & Prompt Engineering Course in Delhi | NIGAPE",
-    description:
-      "Learn Generative AI and Prompt Engineering in Delhi through mentor-led projects, certification, and placement-focused training at NIGAPE.",
-    url: "https://www.nigape.com/",
-    type: "website",
-  },
-};
+import { buildPageMetadata } from "@/lib/seo";
+
+export async function generateMetadata() {
+  return buildPageMetadata({
+    path: "/",
+    defaultTitle: "Generative AI & Prompt Engineering Course in Delhi | NIGAPE",
+    defaultDescription:
+      "Join NIGAPE for Generative AI & Prompt Engineering in Delhi. Learn AI tools, LLMs, prompting, agents and real projects with mentor support.",
+    defaultCanonical: "https://www.nigape.com/",
+  });
+}
 
 const homeSchema = {
   "@context": "https://schema.org",

@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { ArrowLeft, BookOpenText, FileText, LayoutDashboard, PenSquare } from "lucide-react";
+import { ArrowLeft, BookOpenText, FileText, Globe, LayoutDashboard, PenSquare } from "lucide-react";
 import AdminLogoutButton from "@/components/AdminLogoutButton";
 import "@/styles/admin.css";
 
@@ -15,6 +15,7 @@ const navItems = [
     match: (pathname) => pathname === "/admin/blog" || pathname.startsWith("/admin/blog/edit"),
   },
   { href: "/admin/blog/create", label: "New Post", icon: PenSquare, match: (pathname) => pathname.startsWith("/admin/blog/create") },
+  { href: "/admin/seo", label: "On-Page SEO", icon: Globe, match: (pathname) => pathname.startsWith("/admin/seo") },
 ];
 
 const AdminLayout = ({ children }) => {
@@ -28,8 +29,8 @@ const AdminLayout = ({ children }) => {
             <BookOpenText size={18} />
           </span>
           <div>
-            <h2>Blog Admin</h2>
-            <p>Manage posts</p>
+            <h2>NIGAPE Admin</h2>
+            <p>Blog &amp; SEO Portal</p>
           </div>
         </div>
 
