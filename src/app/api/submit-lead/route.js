@@ -5,7 +5,7 @@ function normalizeUrl(rawUrl) {
   return rawUrl.trim().replace(/^['\"]|['\"]$/g, "");
 }
 
-const DEFAULT_CRM_LEADS_URL = "https://leads.dizitaladda.com/api/public/leads";
+const DEFAULT_SITE_URL = "https://www.nigape.com";
 
 function parseRequestBody(raw) {
   if (!raw) return {};
@@ -30,8 +30,7 @@ export async function POST(request) {
     const city = asText(parsed.city);
     const message = asText(parsed.message);
 
-    // Standardized payload:
-    // User requirement: source: "main website", domain: "nigape"
+    // The source is controlled by the server, regardless of frontend input.
     const leadPayload = {
       ...parsed,
       name,
@@ -40,18 +39,16 @@ export async function POST(request) {
       course,
       city,
       message,
-      source: "main website",
+      source: process.env.SITE_SOURCE || "nigape.com",
       domain: "nigape",
       submittedAt: parsed.submittedAt || new Date().toISOString(),
     };
 
     // Submit leads to the CRM endpoint configured on the server.
-    const crmEndpoint = normalizeUrl(
-      process.env.CRM_LEADS_URL || process.env.CRM_ENDPOINT || DEFAULT_CRM_LEADS_URL
-    );
+    const crmEndpoint = normalizeUrl(process.env.CRM_API_URL);
 
     if (!crmEndpoint) {
-      console.warn("CRM endpoint is not configured (CRM_LEADS_URL / CRM_ENDPOINT).");
+      console.error("CRM_API_URL is undefined; lead was not sent.");
       return NextResponse.json(
         {
           ok: false,
@@ -61,21 +58,31 @@ export async function POST(request) {
       );
     }
 
+    const configuredSiteUrl = normalizeUrl(process.env.SITE_URL);
+    const siteUrl = new URL(
+      process.env.NODE_ENV === "development"
+        ? configuredSiteUrl || "http://localhost:3000"
+        : configuredSiteUrl || DEFAULT_SITE_URL
+    );
+    const origin = siteUrl.origin;
+    const referer = `${origin}/`;
+
     try {
       const res = await fetch(crmEndpoint, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
           "Accept": "application/json",
-          "Origin": "https://www.nidads.com",
+          "Origin": origin,
+          "Referer": referer,
         },
         body: JSON.stringify(leadPayload),
       });
 
-      const json = await res.json().catch(() => null);
+      const responseBody = await res.text();
 
       if (!res.ok) {
-        console.error("CRM submission returned non-OK status:", res.status, json);
+        console.error("CRM submission failed:", { status: res.status, body: responseBody });
         return NextResponse.json(
           {
             ok: false,
