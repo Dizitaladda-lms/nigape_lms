@@ -5,6 +5,8 @@ function normalizeUrl(rawUrl) {
   return rawUrl.trim().replace(/^['\"]|['\"]$/g, "");
 }
 
+const DEFAULT_CRM_LEADS_URL = "https://leads.dizitaladda.com/api/public/leads";
+
 function parseRequestBody(raw) {
   if (!raw) return {};
   try {
@@ -20,12 +22,13 @@ export async function POST(request) {
     const rawBody = await request.text();
     const parsed = parseRequestBody(rawBody);
 
-    const name = (parsed.name || "").trim();
-    const email = (parsed.email || "").trim();
-    const phone = (parsed.phone || parsed.mobile || "").trim();
-    const course = (parsed.course || parsed.subject || "").trim();
-    const city = (parsed.city || "").trim();
-    const message = (parsed.message || "").trim();
+    const asText = (value) => (typeof value === "string" ? value.trim() : "");
+    const name = asText(parsed.name);
+    const email = asText(parsed.email);
+    const phone = asText(parsed.phone || parsed.mobile);
+    const course = asText(parsed.course || parsed.subject);
+    const city = asText(parsed.city);
+    const message = asText(parsed.message);
 
     // Standardized payload:
     // User requirement: source: "main website", domain: "nigape"
@@ -42,18 +45,20 @@ export async function POST(request) {
       submittedAt: parsed.submittedAt || new Date().toISOString(),
     };
 
-    // Submit lead strictly to CRM (fetched from environment variable)
+    // Submit leads to the CRM endpoint configured on the server.
     const crmEndpoint = normalizeUrl(
-      process.env.CRM_LEADS_URL || process.env.CRM_ENDPOINT
+      process.env.CRM_LEADS_URL || process.env.CRM_ENDPOINT || DEFAULT_CRM_LEADS_URL
     );
 
     if (!crmEndpoint) {
       console.warn("CRM endpoint is not configured (CRM_LEADS_URL / CRM_ENDPOINT).");
-      return NextResponse.json({
-        ok: true,
-        message: "Lead received (CRM endpoint not configured)",
-        crm: false,
-      });
+      return NextResponse.json(
+        {
+          ok: false,
+          error: "Lead could not be sent because CRM is not configured. Please try again later.",
+        },
+        { status: 503 }
+      );
     }
 
     try {
