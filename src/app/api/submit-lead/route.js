@@ -67,6 +67,7 @@ export async function POST(request) {
         headers: {
           "Content-Type": "application/json",
           "Accept": "application/json",
+          "Origin": "https://www.nidads.com",
         },
         body: JSON.stringify(leadPayload),
       });
