@@ -29,6 +29,11 @@ const nextConfig = {
         destination: "/courses",
         permanent: true,
       },
+      {
+        source: "/ai-ppt-maker-free",
+        destination: "/courses/ai-literacy-for-everyone",
+        permanent: true,
+      },
     ];
   },
 };
