@@ -1,4 +1,7 @@
 import prisma from "@/lib/prisma";
+import { OFFICIAL_CATEGORIES } from "@/lib/blog-categories";
+
+export { OFFICIAL_CATEGORIES } from "@/lib/blog-categories";
 
 export const BLOG_CARD_SELECT = {
   id: true,
@@ -12,16 +15,6 @@ export const BLOG_CARD_SELECT = {
   updatedAt: true,
   published: true,
 };
-
-export const OFFICIAL_CATEGORIES = [
-  "Gen AI",
-  "Prompt Engineering",
-  "Machine Learning",
-  "Career and Course",
-  "Brand Strategy",
-  "Tools and Resources",
-  "Latest News",
-];
 
 // In-memory cache for ultra-fast listing response
 const cacheStore = new Map();

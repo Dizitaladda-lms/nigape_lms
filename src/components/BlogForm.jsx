@@ -4,7 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import BlogEditor from "@/components/BlogEditor";
 import { withAdminCsrf } from "@/lib/client-csrf";
-import { OFFICIAL_CATEGORIES } from "@/lib/blogs";
+import { OFFICIAL_CATEGORIES } from "@/lib/blog-categories";
 
 const baseState = {
   title: "",

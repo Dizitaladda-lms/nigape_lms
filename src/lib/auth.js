@@ -7,19 +7,20 @@ const CSRF_COOKIE = "admin_csrf";
 const SESSION_TTL_MS = 1000 * 60 * 60 * 12; // 12 hours
 
 export const getAdminConfigError = () => {
-  const adminUser = process.env.ADMIN_USERNAME || "admin@nigape.com";
-  const adminPass = process.env.ADMIN_PASSWORD || "nigape@2026";
-  if (!adminUser?.trim()) {
+  if (!process.env.ADMIN_USERNAME?.trim()) {
     return "ADMIN_USERNAME is required for admin authentication";
   }
-  if (!adminPass) {
+  if (!process.env.ADMIN_PASSWORD) {
     return "ADMIN_PASSWORD is required for admin authentication";
+  }
+  if (!process.env.ADMIN_SESSION_SECRET || process.env.ADMIN_SESSION_SECRET.length < 32) {
+    return "ADMIN_SESSION_SECRET must be set to at least 32 characters";
   }
   return null;
 };
 
 const getSecret = () => {
-  return process.env.ADMIN_SESSION_SECRET || "nigape-admin-secure-session-secret-default-key-2026";
+  return process.env.ADMIN_SESSION_SECRET;
 };
 
 const encodePayload = (payload) => Buffer.from(JSON.stringify(payload)).toString("base64url");
@@ -48,8 +49,8 @@ export const validateAdminCredentials = (username, password) => {
   if (configError) {
     return false;
   }
-  const adminUser = (process.env.ADMIN_USERNAME || "admin@nigape.com").trim().toLowerCase();
-  const adminPass = process.env.ADMIN_PASSWORD || "nigape@2026";
+  const adminUser = process.env.ADMIN_USERNAME.trim().toLowerCase();
+  const adminPass = process.env.ADMIN_PASSWORD;
   if (!username || !password || typeof username !== "string" || typeof password !== "string") {
     return false;
   }
@@ -62,7 +63,7 @@ export const createSessionToken = () => {
   const csrfToken = crypto.randomBytes(32).toString("hex");
   const issuedAt = Date.now();
   const payload = {
-    sub: process.env.ADMIN_USERNAME || "admin",
+    sub: process.env.ADMIN_USERNAME,
     exp: issuedAt + SESSION_TTL_MS,
     iat: issuedAt,
     sid: crypto.randomUUID(),
@@ -104,6 +105,9 @@ const getCookieStore = async () => {
 };
 
 export const getAdminSession = async () => {
+  if (getAdminConfigError()) {
+    return null;
+  }
   const store = await getCookieStore();
   if (!store || typeof store.get !== "function") {
     return null;
