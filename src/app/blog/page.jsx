@@ -33,6 +33,8 @@ export const metadata = {
   },
 };
 
+export const dynamic = "force-dynamic";
+
 export default async function BlogPage({ searchParams }) {
   const params = (await searchParams) || {};
   const resolvedParams = { ...params };
@@ -41,19 +43,13 @@ export default async function BlogPage({ searchParams }) {
   const currentCategory = (resolvedParams.category || resolvedParams.tag || "").trim();
   const baseUrl = await getBaseUrl();
 
-  let data;
-  try {
-    data = await getBlogListing({
-      page,
-      search: searchQuery,
-      category: currentCategory,
-      limit: 18,
-      useCache: true,
-    });
-  } catch (error) {
-    console.error("Error fetching blog listing:", error);
-    data = { data: [], pagination: { page: 1, totalPages: 1, limit: 18, total: 0 } };
-  }
+  const data = await getBlogListing({
+    page,
+    search: searchQuery,
+    category: currentCategory,
+    limit: 18,
+    useCache: true,
+  });
 
   const blogs = data?.data || [];
   const hasFilters = Boolean(searchQuery || currentCategory);

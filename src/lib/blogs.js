@@ -220,116 +220,69 @@ export async function getBlogListing({
  * Get distinct tags with top post counts across published blogs
  */
 export async function getTopDiscoveredTags(limit = 10) {
-  try {
-    const blogs = await prisma.blog.findMany({
-      where: { published: true },
-      select: { tags: true },
-      take: 100,
-    });
-    const counts = {};
-    for (const b of blogs) {
-      for (const t of b.tags || []) {
-        if (!t) continue;
-        const normalized = t.toLowerCase();
-        counts[normalized] = (counts[normalized] || 0) + 1;
-      }
+  const blogs = await prisma.blog.findMany({
+    where: { published: true },
+    select: { tags: true },
+    take: 100,
+  });
+  const counts = {};
+  for (const b of blogs) {
+    for (const t of b.tags || []) {
+      if (!t) continue;
+      const normalized = t.toLowerCase();
+      counts[normalized] = (counts[normalized] || 0) + 1;
     }
-    return Object.keys(counts)
-      .sort((a, b) => counts[b] - counts[a])
-      .slice(0, limit);
-  } catch (error) {
-    console.error("Failed to get top tags:", error);
-    return [];
   }
+  return Object.keys(counts)
+    .sort((a, b) => counts[b] - counts[a])
+    .slice(0, limit);
 }
 
 export async function getBlogBySlug(slug) {
   if (!slug) return null;
-  const decodedSlug = decodeURIComponent(slug).trim();
+  const normalizedSlug = slug.trim();
 
-  try {
-    const blog = await prisma.blog.findFirst({
-      where: {
-        OR: [
-          { slug: decodedSlug },
-          { slug: decodedSlug.toLowerCase() },
-          { slug: slug.trim() },
-        ],
-      },
-    });
-    if (blog) return blog;
-  } catch (error) {
-    console.error("Error fetching blog by slug (trying fallback query):", error);
-    try {
-      // Fallback query in case any optional columns are missing in custom DBs
-      const fallback = await prisma.blog.findFirst({
-        where: {
-          OR: [
-            { slug: decodedSlug },
-            { slug: decodedSlug.toLowerCase() },
-          ],
-        },
-        select: {
-          id: true,
-          title: true,
-          slug: true,
-          content: true,
-          excerpt: true,
-          coverImg: true,
-          tags: true,
-          author: true,
-          published: true,
-          createdAt: true,
-          updatedAt: true,
-        },
-      });
-      return fallback;
-    } catch (fallbackErr) {
-      console.error("Fallback query also failed:", fallbackErr);
-      return null;
-    }
-  }
-  return null;
+  return prisma.blog.findFirst({
+    where: {
+      published: true,
+      OR: [
+        { slug: normalizedSlug },
+        { slug: normalizedSlug.toLowerCase() },
+      ],
+    },
+  });
 }
 
 export async function getBlogSidebarData() {
-  try {
-    const [latestPosts, publishedPosts] = await Promise.all([
-      prisma.blog.findMany({
-        where: { published: true },
-        orderBy: { createdAt: "desc" },
-        take: 4,
-        select: {
-          id: true,
-          slug: true,
-          title: true,
-          coverImg: true,
-          tags: true,
-          createdAt: true,
-        },
-      }),
-      prisma.blog.findMany({
-        where: { published: true },
-        select: { tags: true },
-      }),
-    ]);
+  const [latestPosts, publishedPosts] = await Promise.all([
+    prisma.blog.findMany({
+      where: { published: true },
+      orderBy: { createdAt: "desc" },
+      take: 4,
+      select: {
+        id: true,
+        slug: true,
+        title: true,
+        coverImg: true,
+        tags: true,
+        createdAt: true,
+      },
+    }),
+    prisma.blog.findMany({
+      where: { published: true },
+      select: { tags: true },
+    }),
+  ]);
 
-    const categories = Array.from(
-      new Set([
-        ...OFFICIAL_CATEGORIES,
-        ...publishedPosts.flatMap((post) => post.tags || []),
-      ])
-    ).slice(0, 12);
+  const categories = Array.from(
+    new Set([
+      ...OFFICIAL_CATEGORIES,
+      ...publishedPosts.flatMap((post) => post.tags || []),
+    ])
+  ).slice(0, 12);
 
-    return {
-      latestPosts,
-      categories,
-    };
-  } catch (error) {
-    console.error("Error in getBlogSidebarData:", error);
-    return {
-      latestPosts: [],
-      categories: [],
-    };
-  }
+  return {
+    latestPosts,
+    categories,
+  };
 }

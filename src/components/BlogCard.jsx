@@ -32,6 +32,7 @@ const BlogCard = ({ blog, baseUrl }) => {
       {/* Cover image */}
       <Link
         href={`/blog/${blog.slug}`}
+        prefetch={false}
         className="blog-card__image"
         aria-label={`Read ${blog.title}`}
       >
@@ -67,7 +68,7 @@ const BlogCard = ({ blog, baseUrl }) => {
 
         {/* Title */}
         <h3>
-          <Link href={`/blog/${blog.slug}`}>{blog.title}</Link>
+          <Link href={`/blog/${blog.slug}`} prefetch={false}>{blog.title}</Link>
         </h3>
 
         {/* Excerpt */}
@@ -78,6 +79,7 @@ const BlogCard = ({ blog, baseUrl }) => {
         {/* CTA */}
         <Link
           href={`/blog/${blog.slug}`}
+          prefetch={false}
           className="blog-card__cta"
         >
           Continue reading →

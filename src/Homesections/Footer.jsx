@@ -138,10 +138,21 @@ export default function Footer() {
                   { label: "Sitemap", href: "/sitemap" },
                 ].map((item) => (
                   <li key={item.href}>
-                    <Link href={item.href}
-                      className="text-gray-400 hover:text-[#FF40EB] transition-all duration-300 hover:translate-x-1 inline-block text-sm">
-                      {item.label}
-                    </Link>
+                    {item.href === "/sitemap.xml" ? (
+                      <a
+                        href={item.href}
+                        className="text-gray-400 hover:text-[#FF40EB] transition-all duration-300 hover:translate-x-1 inline-block text-sm"
+                      >
+                        {item.label}
+                      </a>
+                    ) : (
+                      <Link
+                        href={item.href}
+                        className="text-gray-400 hover:text-[#FF40EB] transition-all duration-300 hover:translate-x-1 inline-block text-sm"
+                      >
+                        {item.label}
+                      </Link>
+                    )}
                   </li>
                 ))}
               </ul>

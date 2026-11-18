@@ -20,11 +20,16 @@ const staticPages = [
 export async function getSitemapData() {
   const baseUrl = getSiteUrl();
   const generatedAt = new Date();
-  const blogs = await prisma.blog.findMany({
-    where: { published: true },
-    select: { title: true, slug: true, updatedAt: true, createdAt: true },
-    orderBy: { updatedAt: "desc" },
-  });
+  let blogs = [];
+  try {
+    blogs = await prisma.blog.findMany({
+      where: { published: true },
+      select: { title: true, slug: true, updatedAt: true, createdAt: true },
+      orderBy: { updatedAt: "desc" },
+    });
+  } catch (error) {
+    console.error("Failed to load blog entries for sitemap:", error);
+  }
 
   return {
     baseUrl,

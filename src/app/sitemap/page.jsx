@@ -24,12 +24,12 @@ export default async function SitemapPage() {
                 Browse all public pages, AI programs, courses, and articles from NIGAPE in one place.
               </p>
             </div>
-            <Link
+            <a
               href="/sitemap.xml"
               className="inline-flex w-fit items-center gap-2 rounded-full border border-[#FF40EB]/40 px-5 py-3 text-sm font-semibold text-white transition hover:border-[#FF40EB] hover:bg-[#FF40EB]/10 hover:text-[#FF40EB]"
             >
               View XML sitemap <ArrowUpRight className="h-4 w-4" />
-            </Link>
+            </a>
           </div>
           <p className="mt-6 text-sm text-gray-500">
             {totalLinks} pages · Automatically updated with published articles
@@ -62,6 +62,7 @@ export default async function SitemapPage() {
                     <li key={link.path}>
                       <Link
                         href={link.path}
+                        prefetch={false}
                         className="group flex items-center justify-between gap-4 py-3.5"
                       >
                         <span className="min-w-0">
