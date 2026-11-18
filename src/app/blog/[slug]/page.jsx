@@ -3,7 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import BlogSidebar from "@/components/BlogSidebar";
 import BlogShell from "@/components/BlogShell";
-import { getBlogBySlug, OFFICIAL_CATEGORIES } from "@/lib/blogs";
+import { getBlogBySlug, getBlogSidebarData } from "@/lib/blogs";
 import { getSiteUrl } from "@/lib/site-url";
 import "@/styles/blog.css";
 
@@ -116,6 +116,7 @@ export default async function BlogPostPage({ params }) {
     notFound();
   }
 
+  const { latestPosts, categories } = await getBlogSidebarData();
   const siteUrl = getSiteUrl();
   const canonicalUrl = `${siteUrl}/blog/${blog.slug}`;
   const structuredData = getBlogStructuredData(blog, canonicalUrl, siteUrl);
@@ -179,8 +180,8 @@ export default async function BlogPostPage({ params }) {
           </article>
 
           <BlogSidebar
-            latestPosts={[]}
-            categories={OFFICIAL_CATEGORIES}
+            latestPosts={latestPosts}
+            categories={categories}
             tags={tags}
           />
         </div>
