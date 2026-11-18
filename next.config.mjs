@@ -34,6 +34,11 @@ const nextConfig = {
         destination: "/courses/ai-literacy-for-everyone",
         permanent: true,
       },
+      {
+        source: "/krutrim-ai",
+        destination: "/courses",
+        permanent: true,
+      },
     ];
   },
 };
