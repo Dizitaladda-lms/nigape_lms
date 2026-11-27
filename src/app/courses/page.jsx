@@ -509,7 +509,7 @@ export default function CoursesPage() {
           <div className="w-full flex justify-center lg:order-1">
             <div className="w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg" style={{ filter: "drop-shadow(0 0 12px #ffffff49)" }}>
               <img
-                src="/group/group_final.webp"
+                src="/group/newgroup.jpeg"
                 alt="NIGAPE Team"
                 className="w-full h-[220px] sm:h-[360px] md:h-[460px] lg:h-[80vh] object-contain object-center"
               />
