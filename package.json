@@ -10,6 +10,7 @@
     "lint": "eslint",
     "prepare": "prisma generate",
     "db:push": "prisma db push",
+    "db:migrate-data": "node prisma/migrate-db.js",
     "db:studio": "prisma studio",
     "seed": "node prisma/seed.js"
   },
