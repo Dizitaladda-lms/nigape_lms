@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server";
+import { revalidatePath } from "next/cache";
 import { ensureAdminApi } from "@/lib/auth";
 import { makeUniqueBlogSlug, normalizeBlogInput } from "@/lib/admin-blog";
+import { invalidateBlogCache } from "@/lib/blogs";
 import prisma from "@/lib/prisma";
 
 export const dynamic = "force-dynamic";
@@ -30,6 +32,9 @@ export async function PUT(request, { params }) {
       where: { id },
       data: { ...normalized.data, slug },
     });
+    invalidateBlogCache();
+    revalidatePath("/blog");
+    revalidatePath(`/blog/${blog.slug}`);
     return NextResponse.json({ data: blog });
   } catch (error) {
     if (error?.code === "P2025") {
@@ -51,7 +56,15 @@ export async function DELETE(request, { params }) {
 
   const { id } = await params;
   try {
-    await prisma.blog.delete({ where: { id } });
+    const deleted = await prisma.blog.delete({
+      where: { id },
+      select: { slug: true },
+    });
+    invalidateBlogCache();
+    revalidatePath("/blog");
+    if (deleted?.slug) {
+      revalidatePath(`/blog/${deleted.slug}`);
+    }
     return NextResponse.json({ ok: true });
   } catch (error) {
     if (error?.code === "P2025") {

@@ -7,7 +7,7 @@ import { getBlogBySlug, getBlogSidebarData } from "@/lib/blogs";
 import { getSiteUrl } from "@/lib/site-url";
 import "@/styles/blog.css";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 300;
 export const dynamicParams = true;
 
 const defaultDescription =
@@ -72,7 +72,16 @@ function serializeStructuredData(value) {
 
 export async function generateMetadata({ params }) {
   const { slug } = await params;
-  const blog = await getBlogBySlug(slug);
+  let blog = null;
+  try {
+    blog = await getBlogBySlug(slug);
+  } catch (error) {
+    console.error(`generateMetadata for /blog/${slug} failed:`, error);
+    return {
+      title: "Blog | NIGAPE",
+      description: defaultDescription,
+    };
+  }
 
   if (!blog) {
     return { title: "Blog post not found | NIGAPE" };

@@ -1,7 +1,8 @@
 import { NextResponse } from "next/server";
+import { revalidatePath } from "next/cache";
 import { ensureAdminApi } from "@/lib/auth";
 import { makeUniqueBlogSlug, normalizeBlogInput } from "@/lib/admin-blog";
-import { getBlogListing } from "@/lib/blogs";
+import { getBlogListing, invalidateBlogCache } from "@/lib/blogs";
 import prisma from "@/lib/prisma";
 
 export const dynamic = "force-dynamic";
@@ -68,6 +69,9 @@ export async function POST(request) {
     const blog = await prisma.blog.create({
       data: { ...normalized.data, slug },
     });
+    invalidateBlogCache();
+    revalidatePath("/blog");
+    revalidatePath(`/blog/${blog.slug}`);
     return NextResponse.json({ data: blog }, { status: 201 });
   } catch (error) {
     console.error("POST /api/blog failed:", error);

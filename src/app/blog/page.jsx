@@ -146,6 +146,15 @@ export default async function BlogPage({ searchParams }) {
               <BlogCard key={blog.id} blog={blog} baseUrl={baseUrl} />
             ))}
           </div>
+        ) : data?.unavailable ? (
+          <div className="blog-empty">
+            <div className="blog-empty__icon">⚠️</div>
+            <h3 className="text-xl font-bold mb-2">Blog temporarily unavailable</h3>
+            <p>We&apos;re having trouble reaching the blog database right now. Please try again shortly.</p>
+            <Link href="/blog" className="blog-empty__reset">
+              Retry
+            </Link>
+          </div>
         ) : (
           <div className="blog-empty">
             <div className="blog-empty__icon">🔍</div>

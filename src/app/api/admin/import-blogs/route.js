@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server";
+import { revalidatePath } from "next/cache";
 import { ensureAdminApi } from "@/lib/auth";
 import { makeUniqueBlogSlug, normalizeBlogInput } from "@/lib/admin-blog";
+import { invalidateBlogCache } from "@/lib/blogs";
 import { slugify } from "@/lib/slugify";
 import prisma from "@/lib/prisma";
 
@@ -52,6 +54,9 @@ export async function POST(request) {
     console.error("POST /api/admin/import-blogs failed:", error);
     return NextResponse.json({ error: "Unable to import blog posts." }, { status: 503 });
   }
+
+  invalidateBlogCache();
+  revalidatePath("/blog");
 
   return NextResponse.json({
     message: "Blog import completed.",
